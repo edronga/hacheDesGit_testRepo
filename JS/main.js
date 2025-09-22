@@ -3,7 +3,7 @@
 // game loop
 
 let timeStamp = Date.now()
-const REFRESH_INTERVAL = 15
+const REFRESH_INTERVAL = 30
 let customFrame = {
     value: 1,
     NUMBER_OF_FRAMES: 24,
