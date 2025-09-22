@@ -3,7 +3,7 @@
 // game loop
 
 let timeStamp = Date.now()
-const REFRESH_INTERVAL = 30
+const REFRESH_INTERVAL = 15
 let customFrame = {
     value: 1,
     NUMBER_OF_FRAMES: 24,
@@ -33,6 +33,16 @@ function main(){
     const htmlData = gameData.getCurrentPage()
     document.querySelector('#myContent').appendChild(htmlData)
 }
+
+document.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+}, {passive: false})
+document.addEventListener('pointermove', (e) => {
+    e.preventDefault();
+}, {passive: false})
+document.addEventListener('pointerup', (e) => {
+    e.preventDefault();
+}, {passive: false})
 
 gameData.getCurrentPage = titleScreen
 loop();
