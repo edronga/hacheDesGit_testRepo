@@ -35,14 +35,17 @@ function oneDayPuzzleModeScreen(canvasDescription = gameData.canvasDescription){
     })
 
     // require that document has css property touch-action : none (by default, panning and scrolling are handled exclusively by the browser, so continuous 'pointermove events' stop firing very quickly if option is not disabled)
-    canvas.addEventListener('pointermove', (e) =>{
+    r.addEventListener('pointermove', (e) =>{
         const x = e.clientX
         const y = e.clientY
         const outOfBoundCondition = function (){
             if (canvasDescription.isThereAFloatingRectangle() === false){
-                return false
+                return false;
             }
-            const PIXEL_MARGIN = 10
+            if (canvasDescription.isFloatingRectangleGrabbed === false){
+                return false;
+            }
+            const PIXEL_MARGIN = 3
             if (x < 0 + PIXEL_MARGIN){
                 return true;
             }
