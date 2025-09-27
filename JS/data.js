@@ -12,26 +12,29 @@ let gameData = {
     playerScore: 0,
     bestFoundScore: 0,
     initialize: function(difficulty){
+        
+        const fixedSchedule = generateRandomSchedule(3)
+
         const slotlist = function(){
             let r = []
             let schedule = new Schedule()
             switch (difficulty){
                 case 'easy':
-                    schedule = generateRandomSchedule(8)
+                    schedule = generateRandomSchedule(5, fixedSchedule)
                     r = Object.keys(schedule.value).map((name) =>{
                         return schedule.value[name].durationInHours
                     })
                     break;
                 
                 case 'medium':
-                    schedule = generateRandomSchedule(12)
+                    schedule = generateRandomSchedule(9, fixedSchedule)
                     r = Object.keys(schedule.value).map((name) =>{
                         return schedule.value[name].durationInHours
                     })
                     break;
 
                 case 'hard':
-                    schedule = generateRandomSchedule(16)
+                    schedule = generateRandomSchedule(12, fixedSchedule)
                     r = Object.keys(schedule.value).map((name) =>{
                         return schedule.value[name].durationInHours
                     })
@@ -46,9 +49,11 @@ let gameData = {
             }
             return r;
         }()
+        
+        
+        const boardSchedule = reverseGreedySolve(slotlist, fixedSchedule)
 
-        const boardSchedule = reverseGreedySolve(slotlist)
-        this.canvasDescription = new CanvasDescription(boardSchedule, window.innerWidth, window.innerHeight*0.8)
+        this.canvasDescription = new CanvasDescription(boardSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
         this.chemoSlotsDescription = {
             completeList: slotlist,
             placedSlots: slotlist,
@@ -56,7 +61,7 @@ let gameData = {
             floatingSlot: []
         }
         this.playerScore = checkMajorConstraints(boardSchedule.value)
-        this.bestFoundScore = checkMajorConstraints(greedySolve(slotlist).value)
+        this.bestFoundScore = checkMajorConstraints(greedySolve(slotlist, fixedSchedule).value)
         
     }
 }

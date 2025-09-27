@@ -91,8 +91,8 @@ class Schedule {
     }
 }
 
-function generateRandomSchedule(numberOfPatients, numberOfRooms = 4, firstStart = 9, lastEnd = 18.5){
-    let r = new Schedule()
+function generateRandomSchedule(numberOfPatients, baseSchedule = new Schedule(), numberOfRooms = 4, firstStart = 9, lastEnd = 18.5){
+    let r = baseSchedule.copy()
 
     const arrayOfTimes = function(){
         let r = []

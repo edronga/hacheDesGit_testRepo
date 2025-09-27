@@ -1,13 +1,13 @@
 'use strict'
 
-function greedySolve(slotlist){
+function greedySolve(slotlist, baseSchedule){
     let r = new Schedule()
     
     const FIRST_START_TIME = 9
     const LAST_END_TIME = 19
     
-    function main(slotlist){
-        let solution = new Schedule()
+    function main(slotlist, baseSchedule = new Schedule()){
+        let solution = baseSchedule.copy()
 
         const sortedSlotList = slotlist.toSorted((a,b) => a - b)
 
@@ -78,7 +78,7 @@ function greedySolve(slotlist){
     let currentBest = 999999999
     const ITERATIONS = 100
     for (let i = 0; i< ITERATIONS; i++){
-        const currentTry = main(slotlist)
+        const currentTry = main(slotlist, baseSchedule)
         const score = checkMajorConstraints(currentTry.value)
         if (score < currentBest){
             r = currentTry.copy()
@@ -86,19 +86,19 @@ function greedySolve(slotlist){
         }
     }
 
-    console.log('solutionScore:', checkMajorConstraints(r.value))
+    console.log('solutionScore for best found solution:', checkMajorConstraints(r.value))
     return r;
 }
 
 
-function reverseGreedySolve(slotlist){
+function reverseGreedySolve(slotlist, baseSchedule){
     let r = new Schedule()
     
     const FIRST_START_TIME = 9
     const LAST_END_TIME = 19
     
-    function main(slotlist){
-        let solution = new Schedule()
+    function main(slotlist, baseSchedule = new Schedule()){
+        let solution = baseSchedule.copy()
 
         const sortedSlotList = slotlist.toSorted((a,b) => a - b)
 
@@ -168,7 +168,7 @@ function reverseGreedySolve(slotlist){
     let currentWorst = 0
     const ITERATIONS = 10
     for (let i = 0; i< ITERATIONS; i++){
-        const currentTry = main(slotlist)
+        const currentTry = main(slotlist, baseSchedule)
         const score = checkMajorConstraints(currentTry.value)
         if (score > currentWorst){
             r = currentTry.copy()

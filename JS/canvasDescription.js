@@ -1,11 +1,12 @@
 'use strict'
 
 class CanvasDescription {
-    constructor(schedule, canvasWidth, canvasHeight){
+    constructor(schedule, fixedSchedule, canvasWidth, canvasHeight){
         this.setRectanglesData = {}
         this.floatingRectangleData = {}
         this.targetRectangleData = {}
         this.schedule = schedule
+        this.fixedSchedule = fixedSchedule
         this.width = canvasWidth
         this.height = canvasHeight  
         this.isFloatingRectangleGrabbed = false  
@@ -18,6 +19,22 @@ class CanvasDescription {
             return rectanglesDataset
         }
         let r = {...rectanglesDataset}
+        const isFixed = checkIfFixed (scheduleData, this.fixedSchedule.value)
+        function checkIfFixed (scheduleData, fixedScheduleValue){
+            if (Object.keys(fixedScheduleValue) === 0){
+                return false;
+            }
+            let r = false
+            Object.keys(fixedScheduleValue).forEach((name2) =>{
+                const durationInHours = fixedScheduleValue[name2].durationInHours
+                const startingTime = fixedScheduleValue[name2].startingTime
+                const room = fixedScheduleValue[name2].room
+                if (scheduleData.durationInHours === durationInHours && scheduleData.startingTime === startingTime && scheduleData.room === room){
+                    r = true
+                }
+            })
+            return r;
+        }
         r[name] = {
             xPosition: xPosition,
             yPosition: yPosition,
@@ -29,7 +46,8 @@ class CanvasDescription {
                 x: 0,
                 y: 0
             },
-            scheduleData: scheduleData
+            scheduleData: scheduleData,
+            isFixed: isFixed
         }
         return r;
     }
@@ -78,6 +96,9 @@ class CanvasDescription {
     }
     grabSetRectangle(name, xPointerPosition, yPointerPosition){
         const rectangle = {... this.setRectanglesData[name]}
+        if (rectangle.isFixed){
+            return;
+        }
         this.setRectanglesData = this.removeRectangleFromDataset(this.setRectanglesData, name)
         this.schedule = this.schedule.copyScheduleWithoutSlotName(this.schedule, name)
         this.floatingRectangleData = this.addRectangleToDataset({}, name, rectangle.xPosition, rectangle.yPosition, rectangle.width, rectangle.height, rectangle.strokeStyle, rectangle.fillStyle, rectangle.scheduleData)
@@ -190,7 +211,7 @@ class CanvasDescription {
             const h = setRectanglesData[name].height
             const fillStyle = setRectanglesData[name].fillStyle
             const strokeStyle = setRectanglesData[name].strokeStyle
-            ctx.fillStyle = fillStyle
+            ctx.fillStyle = setRectanglesData[name].isFixed ? 'mistyRose' : fillStyle;
             ctx.strokeStyle = strokeStyle
             ctx.fillRect(x, y, w, h)
             ctx.strokeRect(x, y, w, h)
