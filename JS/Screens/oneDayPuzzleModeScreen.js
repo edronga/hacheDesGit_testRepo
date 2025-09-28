@@ -116,7 +116,9 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
     }()
     const divList = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     divList.forEach((value) =>{
-        r.querySelector(`#buttonDiv${value}`).innerHTML = `${value}h (x${unplacedSlotsList[value - 1]})`
+        const color = getHSLColorFromDuration(value)
+        r.querySelector(`#buttonDiv${value}`).innerHTML = `<span style = 'color:${color}'>\u25A0 (x${unplacedSlotsList[value - 1]})</span>`
+        
     })
     divList.forEach((value) =>{
         r.querySelector(`#buttonDiv${value}`).addEventListener('pointerdown', (e)=>{
@@ -131,7 +133,7 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
             const height = value * 0.09 * canvasDescription.height
             const xPosition = (canvasDescription.width - width) * 0.5
             const yPosition = (canvasDescription.height - height) * 0.5
-            const color = getBrightColor(value)
+            const color = getHSLColorFromDuration(value)
             const scheduleData = {durationInHours: value}
             gameData.canvasDescription.floatingRectangleData = gameData.canvasDescription.addRectangleToDataset(gameData.canvasDescription.floatingRectangleData, name, xPosition, yPosition, width, height, 'black', color, scheduleData)
             gameData.chemoSlotsDescription.unplacedSlots = function(){ // to refactor, put a method in gameData
@@ -148,7 +150,7 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
         })
     })
 
-    const currentScore = checkMajorConstraints(gameData.canvasDescription.schedule.value) + 100* gameData.chemoSlotsDescription.unplacedSlots.length
+    const currentScore = checkMajorConstraints(gameData.canvasDescription.schedule.value) + 100* gameData.chemoSlotsDescription.unplacedSlots.length + 100*(gameData.canvasDescription.isThereAFloatingRectangle() ? 1 : 0)
     r.querySelector(`#buttonDiv10`).innerHTML = `${currentScore}`
     r.querySelector(`#buttonDiv10`).addEventListener('pointerdown', (e) =>{
     })
