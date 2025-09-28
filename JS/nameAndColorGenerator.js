@@ -49,18 +49,7 @@ function* gen_generateColor(durationInHours = 11){
     }
 }
 
-function getBrightColor(durationInHours){
-    const dict = {
-        1: 'red',
-        2: 'yellow',
-        3: 'orange',
-        4: 'saddleBrown',
-        5: 'deepPink',
-        6: 'lime',
-        7: 'cyan',
-        8: 'blue',
-        9: 'purple'
-    }
-    let r = (dict[durationInHours] !== undefined) ? dict[durationInHours] : 'black';
-    return r;
+function getHSLColorFromDuration(durationInHours, saturation = 100, light = 50){
+    const hue = (durationInHours - 1) * (360 / 9)
+    return `hsl(${hue} ${saturation}% ${light}%)`;
 }

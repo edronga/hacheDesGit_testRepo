@@ -37,11 +37,9 @@ debug['breakLoop'] = function (){
 }
 
 debug['solve'] = function(){
-    const solution = greedySolve(gameData.chemoSlotsDescription.completeList)
+    const solution = greedySolve(gameData.chemoSlotsDescription.completeList, gameData.chemoSlotsDescription.fixedSchedule)
     gameData.canvasDescription.schedule = solution.copy()
-    gameData.canvasDescription.setRectanglesData = gameData.canvasDescription.convertScheduleToRectanglesDataset(solution.value, gameData.canvasDescription.width, gameData.canvasDescription.height)
-    gameData.canvasDescription.floatingRectangleData = {}
-    gameData.canvasDescription.targetRectangleData = {}
+    gameData.canvasDescription = new CanvasDescription(solution, gameData.chemoSlotsDescription.fixedSchedule, window.innerWidth, window.innerHeight*0.8)
     gameData.chemoSlotsDescription.placedSlots = gameData.chemoSlotsDescription.completeList
     gameData.chemoSlotsDescription.unplacedSlots = []
 }

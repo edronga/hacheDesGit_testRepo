@@ -210,8 +210,9 @@ class CanvasDescription {
             const w = setRectanglesData[name].width
             const h = setRectanglesData[name].height
             const fillStyle = setRectanglesData[name].fillStyle
+            const durationInHours = setRectanglesData[name].scheduleData.durationInHours
             const strokeStyle = setRectanglesData[name].strokeStyle
-            ctx.fillStyle = setRectanglesData[name].isFixed ? 'mistyRose' : fillStyle;
+            ctx.fillStyle = setRectanglesData[name].isFixed ? 'darkGrey' : fillStyle;
             ctx.strokeStyle = strokeStyle
             ctx.fillRect(x, y, w, h)
             ctx.strokeRect(x, y, w, h)
@@ -225,7 +226,8 @@ class CanvasDescription {
             const h = floatingRectangleData[name].height
             const fillStyle = floatingRectangleData[name].fillStyle
             const strokeStyle = floatingRectangleData[name].strokeStyle
-            ctx.fillStyle = fillStyle
+            const durationInHours = floatingRectangleData[name].scheduleData.durationInHours
+            ctx.fillStyle = getHSLColorFromDuration(durationInHours, 100, 75)
             ctx.strokeStyle = strokeStyle
             ctx.fillRect(x, y, w, h)
             ctx.strokeRect(x, y, w, h)
@@ -368,7 +370,7 @@ class CanvasDescription {
             const height = scheduleValue[name]['durationInHours'] * 0.09 * canvasHeight
             const fillStyle = function(){
                 const durationInHours = scheduleValue[name]['durationInHours']
-                const color = getBrightColor(durationInHours)
+                const color = getHSLColorFromDuration(durationInHours)
                 return color
             }()
             const scheduleData = {...scheduleValue[name]}

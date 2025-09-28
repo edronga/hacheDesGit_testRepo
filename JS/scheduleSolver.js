@@ -5,8 +5,18 @@ function greedySolve(slotlist, baseSchedule){
     
     const FIRST_START_TIME = 9
     const LAST_END_TIME = 19
+    const MAX_STACK_OVERFLOW = 10
     
-    function main(slotlist, baseSchedule = new Schedule()){
+    function main(slotlist, baseSchedule = new Schedule(), stackCounter = 0){
+        if (stackCounter === MAX_STACK_OVERFLOW){
+            let maxSchedule = new Schedule()
+            for (let i = 9; i <= 18 ; i++){
+                for (let j = 1; j<=4; j++){
+                    maxSchedule.addChemoSlot(i, 1, j)
+                }
+            }
+            return maxSchedule
+        }
         let solution = baseSchedule.copy()
 
         const sortedSlotList = slotlist.toSorted((a,b) => a - b)
@@ -40,7 +50,7 @@ function greedySolve(slotlist, baseSchedule){
             
             if (scheduleOptions.length === 0){
                 console.log('recursive call')
-                return main(slotlist)
+                return main(slotlist, baseSchedule, stackCounter+1)
             }
             
             const ratedScheduleOptions = scheduleOptions.map((scheduleOption) =>{
@@ -96,8 +106,13 @@ function reverseGreedySolve(slotlist, baseSchedule){
     
     const FIRST_START_TIME = 9
     const LAST_END_TIME = 19
+    const MAX_STACK_OVERFLOW = 10
     
-    function main(slotlist, baseSchedule = new Schedule()){
+    function main(slotlist, baseSchedule = new Schedule(), stackCounter = 0){
+        if (stackCounter === MAX_STACK_OVERFLOW){
+            let minSchedule = new Schedule()
+            return minSchedule
+        }
         let solution = baseSchedule.copy()
 
         const sortedSlotList = slotlist.toSorted((a,b) => a - b)
@@ -131,7 +146,7 @@ function reverseGreedySolve(slotlist, baseSchedule){
             
             if (scheduleOptions.length === 0){
                 console.log('recursive call')
-                return main(slotlist)
+                return main(slotlist, baseSchedule, stackCounter+1)
             }
            
             const ratedScheduleOptions = scheduleOptions.map((scheduleOption) =>{

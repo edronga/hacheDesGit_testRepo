@@ -15,7 +15,7 @@ function goToPuzzleModeGameEasy () {
 
 function goToPuzzleModeGameMedium (){
     gameData.getCurrentPage = oneDayPuzzleModeScreen
-    gameData.initialize('medimu')
+    gameData.initialize('medium')
 }
 
 function goToPuzzleModeGameHard (){
@@ -30,6 +30,6 @@ function goToPuzzleModeGameCustomDifficulty (){
 
 function goToPuzzleModeGameOverScreen () {
     gameData.getCurrentPage = puzzleModeGameOverScreen
-    gameData.playerScore = checkMajorConstraints(gameData.canvasDescription.schedule.value) + 100* gameData.chemoSlotsDescription.unplacedSlots.length
+    gameData.playerScore = checkMajorConstraints(gameData.canvasDescription.schedule.value) + 100* gameData.chemoSlotsDescription.unplacedSlots.length + 100* (gameData.canvasDescription.isThereAFloatingRectangle() ? 1 : 0)
 }
 
