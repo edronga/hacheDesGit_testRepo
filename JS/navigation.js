@@ -4,6 +4,10 @@ function goToMenu (){
     gameData.getCurrentPage = menuScreen
 }
 
+function goToTutorialScreen(text, canvasDescription){
+    gameData.getCurrentPage = tutorialScreen(text, canvasDescription)
+}
+
 function goToPuzzleModeDifficultySelection (){
     gameData.getCurrentPage = puzzleModeDifficultySelectionScreen
 }
