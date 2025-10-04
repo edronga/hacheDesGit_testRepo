@@ -41,7 +41,15 @@ function menuScreen() {
         element.style.margin = 0
     })
 
+    divTuto.addEventListener('pointerdown', () =>{
+        const text = 'tutoriel'
+        const canvasDescription = new CanvasDescription(new Schedule(), new Schedule(), window.innerWidth, window.innerHeight*0.8)
+        goToTutorialScreen(text, canvasDescription)
+    })
+
     divPuzzle.addEventListener('pointerdown', goToPuzzleModeDifficultySelection)
+
+
 
     return r;
 }
