@@ -18,14 +18,24 @@ let gameData = {
         
         switch (difficulty){
             case 'easy':
-                fixedSchedule = generateRandomSchedule(1)
+                fixedSchedule = generateRandomSchedule(3)
                 slotlist = function(){
                     let r = []
                     const TOTAL_TIME = 40
                     const remainingTime = TOTAL_TIME - Object.keys(fixedSchedule.value).reduce((previousValue, name) =>{
                         return previousValue + fixedSchedule.value[name].durationInHours
                     }, 0)
-                    const options = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                    const options = function(){
+                        let r = []
+                        const table1 = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                        const table2 = [9, 8, 7, 6, 5, 4, 3, 2, 1]
+                        table1.forEach((value, index)=>{
+                            for (let i = 0; i< table2[index]; i++){
+                                r.push(value)
+                            }
+                        })
+                        return r;
+                    }()
                     function helper(array, max){
                         const random = Math.floor(Math.random() * options.length)
                         let r = [...array]
@@ -42,14 +52,24 @@ let gameData = {
                 break;
             
             case 'medium':
-                fixedSchedule = generateRandomSchedule(2)
+                fixedSchedule = generateRandomSchedule(3)
                 slotlist = function(){
                     let r = []
                     const TOTAL_TIME = 40
                     const remainingTime = TOTAL_TIME - Object.keys(fixedSchedule.value).reduce((previousValue, name) =>{
                         return previousValue + fixedSchedule.value[name].durationInHours
                     }, 0)
-                    const options = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                    const options = function(){
+                        let r = []
+                        const table1 = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                        const table2 = [9, 8, 7, 6, 5, 4, 3, 2, 1]
+                        table1.forEach((value, index)=>{
+                            for (let i = 0; i< table2[index]; i++){
+                                r.push(value)
+                            }
+                        })
+                        return r;
+                    }()
                     function helper(array, max){
                         const random = Math.floor(Math.random() * options.length)
                         let r = [...array]
@@ -73,7 +93,17 @@ let gameData = {
                     const remainingTime = TOTAL_TIME - Object.keys(fixedSchedule.value).reduce((previousValue, name) =>{
                         return previousValue + fixedSchedule.value[name].durationInHours
                     }, 0)
-                    const options = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                    const options = function(){
+                        let r = []
+                        const table1 = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                        const table2 = [9, 8, 7, 6, 5, 4, 3, 2, 1]
+                        table1.forEach((value, index)=>{
+                            for (let i = 0; i< table2[index]; i++){
+                                r.push(value)
+                            }
+                        })
+                        return r;
+                    }()
                     function helper(array, max){
                         const random = Math.floor(Math.random() * options.length)
                         let r = [...array]
