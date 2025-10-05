@@ -12,6 +12,7 @@ class CanvasDescription {
         this.isFloatingRectangleGrabbed = false  
         this.setRectanglesData = this.convertScheduleToRectanglesDataset(this.schedule.value, canvasWidth, canvasHeight)
     }
+    COLOR_FOR_FIXED_SLOTS = 'silver'
     addRectangleToDataset(rectanglesDataset, name, xPosition, yPosition, width, height, strokeStyle, fillStyle, scheduleData){
         if (rectanglesDataset[name] !== undefined){
             console.log(`A rectangle with the name ${name} already exists`)
@@ -212,7 +213,7 @@ class CanvasDescription {
             const fillStyle = setRectanglesData[name].fillStyle
             const durationInHours = setRectanglesData[name].scheduleData.durationInHours
             const strokeStyle = setRectanglesData[name].strokeStyle
-            ctx.fillStyle = setRectanglesData[name].isFixed ? 'darkGrey' : fillStyle;
+            ctx.fillStyle = setRectanglesData[name].isFixed ? this.COLOR_FOR_FIXED_SLOTS : fillStyle;
             ctx.strokeStyle = strokeStyle
             ctx.fillRect(x, y, w, h)
             ctx.strokeRect(x, y, w, h)
