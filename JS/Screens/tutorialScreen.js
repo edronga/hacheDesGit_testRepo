@@ -98,22 +98,22 @@ function* gen_getNextTutorialData(){
     const plot = [
         {
             isOver: false,
-            text: '',
+            text: `C'est un problème d'optimisation : <br>4 boxs, 1 infirmière, des horaires de m***e, 3 contraintes.`,
             canvasDescription: new CanvasDescription(new Schedule(), new Schedule(), window.innerWidth, window.innerHeight*0.8)
         },
         {
             isOver: false,
-            text: '',
+            text: 'Le planning est jugé sur un score de pénalités.',
             canvasDescription: new CanvasDescription(new Schedule(), new Schedule(), window.innerWidth, window.innerHeight*0.8)
         },
         {
             isOver: false,
-            text: '',
+            text: `"3 patients maximum en même temps" : <br>+1 point pour chaque créneau avec plus de 3 patients en même temps`,
             canvasDescription: new CanvasDescription(new Schedule(), new Schedule(), window.innerWidth, window.innerHeight*0.8)
         },
         {
             isOver: false,
-            text: '',
+            text: `"..."`,
             canvasDescription: new CanvasDescription(new Schedule(), new Schedule(), window.innerWidth, window.innerHeight*0.8)
         },
         {

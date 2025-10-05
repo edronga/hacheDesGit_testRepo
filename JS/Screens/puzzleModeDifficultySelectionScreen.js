@@ -13,19 +13,19 @@ function puzzleModeDifficultySelectionScreen(){
 
     const easyDiv = document.createElement('div')
     r.appendChild(easyDiv)
-    easyDiv.innerHTML = '<p>facile</p>'
+    easyDiv.innerHTML = '<p>\u2B50</p>'
 
     const mediumDiv = document.createElement('div')
     r.appendChild(mediumDiv)
-    mediumDiv.innerHTML = '<p>moyen</p>'
+    mediumDiv.innerHTML = '<p>\u2B50\u2B50</p>'
 
     const hardDiv = document.createElement('div')
     r.appendChild(hardDiv)
-    hardDiv.innerHTML = '<p>difficile</p>'
+    hardDiv.innerHTML = '<p>\u2B50\u2B50\u2B50</p>'
 
     const customDiv = document.createElement('div')
     r.appendChild(customDiv)
-    customDiv.innerHTML = '<p>personnalisé</p>'
+    customDiv.innerHTML = '<p>\u2615</p>'
 
     const group = [easyDiv, mediumDiv, hardDiv, customDiv]
     group.forEach((element) =>{
