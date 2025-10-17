@@ -31,7 +31,7 @@ function puzzleModeDifficultySelectionScreen(){
     group.forEach((element) =>{
         element.style.width = '80dvw'
         element.style.height = '20dvh'
-        element.style.border = '2px solid black'
+        element.style.border = '5px solid black'
         element.style.fontSize = '8dvh'
         element.style.display = 'flex'
         element.style.justifyContent = 'center'

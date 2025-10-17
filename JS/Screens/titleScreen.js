@@ -71,36 +71,19 @@ function titleScreen(){
     const bottomDiv = document.createElement('div')
     r.appendChild(bottomDiv)
     bottomDiv.style.gridArea = 'x'
-
-    /*
-    const divAxe = document.createElement('div')
-    r.appendChild(divAxe)
-    divAxe.style.width = '100dvw'
-    divAxe.style.height = '30dvh'
-    divAxe.style.backgroundImage = `url(Images/imgAxe.png)`
-    divAxe.style.backgroundRepeat = 'no-repeat'
-    divAxe.style.backgroundSize = 'contain'
-    divAxe.style.backgroundPosition = 'center'
-
-    const divDie = document.createElement('div')
-    r.appendChild(divDie)
-    divDie.style.width = '100dvw'
-    divDie.style.height = '30dvh'
-    divDie.style.backgroundImage = `url(Images/imgDie.png)`
-    divDie.style.backgroundRepeat = 'no-repeat'
-    divDie.style.backgroundSize = 'contain'
-    divDie.style.backgroundPosition = 'center'
-
-    const divTombstone = document.createElement('div')
-    r.appendChild(divTombstone)
-    divTombstone.style.width = '100dvw'
-    divTombstone.style.height = '30dvh'
-    divTombstone.style.backgroundImage = `url(Images/imgTombstone.png)`
-    divTombstone.style.backgroundRepeat = 'no-repeat'
-    divTombstone.style.backgroundSize = 'contain'
-    divTombstone.style.backgroundPosition = 'center'
-
-    */
+    bottomDiv.style.display = 'grid'
+    bottomDiv.style.gridTemplate = `
+    'a' 66%
+    'b' 34% / 100dvw
+    `
+    const titleDiv = document.createElement('div')
+    bottomDiv.appendChild(titleDiv)
+    titleDiv.style.width = '100dvw'
+    titleDiv.style.height = '100%'
+    titleDiv.style.display = 'flex'
+    titleDiv.style.justifyContent = 'center'
+    titleDiv.style.alignItems = 'center'
+    titleDiv.innerHTML = `<p>logo/titre??<p>`
 
     r.addEventListener('pointerdown', goToMenu)
 
@@ -224,58 +207,6 @@ function getRandomEasingFunction (){
         easeOutSine: function (x){ 
             return Math.sin((x * Math.PI) / 2);
         },
-        /*
-        easeOutBounce: function (x) {
-            const n1 = 7.5625;
-            const d1 = 2.75;
-
-            if (x < 1 / d1) {
-                return n1 * x * x;
-            } else if (x < 2 / d1) {
-                return n1 * (x -= 1.5 / d1) * x + 0.75;
-            } else if (x < 2.5 / d1) {
-                return n1 * (x -= 2.25 / d1) * x + 0.9375;
-            } else {
-                return n1 * (x -= 2.625 / d1) * x + 0.984375;
-            }
-        },
-        easeInBounce: function (x){
-            function f (x) {
-                const n1 = 7.5625;
-                const d1 = 2.75;
-
-                if (x < 1 / d1) {
-                    return n1 * x * x;
-                } else if (x < 2 / d1) {
-                    return n1 * (x -= 1.5 / d1) * x + 0.75;
-                } else if (x < 2.5 / d1) {
-                    return n1 * (x -= 2.25 / d1) * x + 0.9375;
-                } else {
-                    return n1 * (x -= 2.625 / d1) * x + 0.984375;
-                }
-            }
-            return 1 - f(1 - x);
-        },
-        easeInOutBounce: function (x){
-            function f (x) {
-                const n1 = 7.5625;
-                const d1 = 2.75;
-
-                if (x < 1 / d1) {
-                    return n1 * x * x;
-                } else if (x < 2 / d1) {
-                    return n1 * (x -= 1.5 / d1) * x + 0.75;
-                } else if (x < 2.5 / d1) {
-                    return n1 * (x -= 2.25 / d1) * x + 0.9375;
-                } else {
-                    return n1 * (x -= 2.625 / d1) * x + 0.984375;
-                }
-            }
-            return x < 0.5
-                ? (1 - f(1 - 2 * x)) / 2
-                : (1 + f(2 * x - 1)) / 2;
-        },
-        */
         easeInOutSine: function (x) {
             return -(Math.cos(Math.PI * x) - 1) / 2;
         },
@@ -296,43 +227,7 @@ function getRandomEasingFunction (){
         },
         easeInOutCubic: function(x) {
             return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-        },
-        easeInQuart: function(x) {
-            return x * x * x * x;
-        },
-        easeOutQuart: function(x) {
-            return 1 - Math.pow(1 - x, 4);
-        },
-        easeInOutQuart: function(x) {
-            return x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2;
-        },
-        /*
-        easeInExpo: function(x) {
-            return x === 0 ? 0 : Math.pow(2, 10 * x - 10);
-        },
-        easeOutExpo: function(x) {
-            return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
-        },
-        easeInOutExpo: function(x) {
-            return x === 0
-                ? 0
-                : x === 1
-                ? 1
-                : x < 0.5 ? Math.pow(2, 20 * x - 10) / 2
-                : (2 - Math.pow(2, -20 * x + 10)) / 2;
-        },
-        easeInCirc: function(x) {
-            return 1 - Math.sqrt(1 - Math.pow(x, 2));
-        },
-        easeOutCirc: function(x) {
-            return Math.sqrt(1 - Math.pow(x - 1, 2));
-        },
-        easeInOutCirc: function(x) {
-            return x < 0.5
-                ? (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2
-                : (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2;
         }
-        */
     }
 
     const randomKey = Object.keys(table)[Math.floor(Math.random() * Object.keys(table).length)]

@@ -21,33 +21,39 @@ function menuScreen() {
 
     const storyMode = document.createElement('div')
     r.appendChild(storyMode)
-    storyMode.innerHTML = '<p>Mode histoire ??</p>'
+    storyMode.innerHTML = '<p>Histoire</p>'
 
     const highScores = document.createElement('div')
     r.appendChild(highScores)
-    highScores.innerHTML = '<p>Meileurs Scores</p>'
+    highScores.innerHTML = '<p>Médailles</p>'
 
     const group = [divTuto, divPuzzle, storyMode, highScores]
     group.forEach((element) =>{
         element.style.width = '80dvw'
         element.style.height = '20dvh'
-        element.style.border = '2px solid black'
+        element.style.border = `5px solid black`
         element.style.fontSize = '6dvh'
         element.style.display = 'flex'
         element.style.justifyContent = 'center'
         element.style.alignItems = 'center'
+        element.style.backgroundColor = 'white'
     })
     Array.from(r.getElementsByTagName('p')).forEach((element) =>{
         element.style.margin = 0
     })
 
     divTuto.addEventListener('pointerdown', () =>{
-        const text = 'tutoriel'
-        const canvasDescription = new CanvasDescription(new Schedule(), new Schedule(), window.innerWidth, window.innerHeight*0.8)
+        const text = `C'est un jeu d'optimisation de planning.<br/>L'objectif est d'obtenir un score aussi bon voire meilleur que notre logiciel d'optimisation Intelligente en oncologie.<br>(Il s'appelle loIo)`
+        const fullSchedule = generateRandomSchedule(16)
+        const canvasDescription = new CanvasDescription(fullSchedule, new Schedule(), window.innerWidth, window.innerHeight*0.8)
         goToTutorialScreen(text, canvasDescription)
     })
 
     divPuzzle.addEventListener('pointerdown', goToPuzzleModeDifficultySelection)
+
+    highScores.addEventListener('pointerdown', goToBestScoresScreen)
+
+    storyMode.addEventListener('pointerdown', goToStoryModeScreen)
 
 
 

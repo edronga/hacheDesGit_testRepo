@@ -19,10 +19,37 @@ function puzzleModeGameOverScreen(canvasDescription = gameData.canvasDescription
     textDiv.appendChild(textArea)
     const playerScore = gameData.playerScore
     const bestFoundScore = gameData.bestFoundScore
+    const comment = function(){
+        if (playerScore > bestFoundScore){
+            return `C'est sympa d'avoir participé !`
+        }
+        if (playerScore === bestFoundScore){
+            return 'Bravo, aussi bien que la machine !'
+        }
+        if (playerScore < bestFoundScore){
+            return '\u2B50\u2B50\u2B50Félicitation !\u2B50\u2B50\u2B50'
+        }
+    }()
     textArea.innerHTML = `
     <p>Score : ${playerScore}<br>
-    Meilleur score trouvé : ${bestFoundScore}</p>
+    Meilleur score trouvé par loIo: ${bestFoundScore}<br>
+    ${comment}</p>
     `
+
+    const imgArea = document.createElement('div')
+    textDiv.appendChild(imgArea)
+    const imgUrl = function(){
+        if (playerScore > bestFoundScore){
+            return `Images/imgNeutralFaceEmoji.png`
+        }
+        if (playerScore === bestFoundScore){
+            return `Images/imgSmilingEmoji.png`
+        }
+        if (playerScore < bestFoundScore){
+            return `Images/imgSunglassesEmoji.png`
+        }
+    }()
+
     const nextButton = document.createElement('div')
     textDiv.appendChild(nextButton)
     nextButton.innerHTML = `<p>OK</p>`
@@ -38,9 +65,9 @@ function puzzleModeGameOverScreen(canvasDescription = gameData.canvasDescription
     textDiv.style.alignContent = 'center'
     textDiv.style.alignItems = 'center'
     textDiv.style.gridTemplate = `
-    'a c'${(95 - 95 * CANVAS_HEIGHT)}dvh / 70dvw 30dvw
+    'a b'${((95 - 95 * CANVAS_HEIGHT)) * 0.75}dvh
+    'a c'${((95 - 95 * CANVAS_HEIGHT)) * 0.25}dvh / 80dvw 20dvw
     `
-
     textArea.style.height = '100%'
     textArea.style.width = '100%'
     textArea.style.gridArea = 'a'
@@ -49,6 +76,12 @@ function puzzleModeGameOverScreen(canvasDescription = gameData.canvasDescription
     textArea.style.alignItems = 'center'
     textArea.style.justifyContent = 'center'
     textArea.style.alignContent = 'center'
+
+    imgArea.style.height = '100%'
+    imgArea.style.width = '100%'
+    imgArea.style.gridArea = 'b'
+    myStyle.addBackgroundImage(imgUrl, imgArea.style)
+    
 
     nextButton.style.height = '100%'
     nextButton.style.width = '100%'
@@ -69,7 +102,22 @@ function puzzleModeGameOverScreen(canvasDescription = gameData.canvasDescription
         gameData.chemoSlotsDescription.unplacedSlots = []
     }
 
-    nextButton.addEventListener('pointerdown', goToMenu)
+    nextButton.addEventListener('pointerdown', () =>{
+        const difficulty = gameData.currentDifficultySetting
+        const result = function(){
+            if (playerScore > bestFoundScore){
+                return `hasTried`
+            }
+            if (playerScore === bestFoundScore){
+                return `hasEqualized`
+            }
+            if (playerScore < bestFoundScore){
+                return `hasBeaten`
+            }
+        }()
+        gameData.medalsCounter[difficulty][result]++
+        goToBestScoresScreen()
+    })
 
     return r;
 }

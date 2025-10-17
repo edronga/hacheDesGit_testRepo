@@ -84,28 +84,50 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
     r.style.width = WIDTH
 
     r.style.display = 'grid'
-    r.style.gridTemplateColumns = 'repeat(4, 1fr)'
-    r.style.gridTemplateRows = 'repeat(3, 1fr)'
+    r.style.gridTemplate = `
+    'a d g s' 6dvh
+    'b e h s' 6dvh
+    'c f i ok' 6dvh / 25dvw 25dvw 25dvw 25dvw 
+    `
     r.style.gap = '0px'
     r.style.alignContent = 'center'
     r.style.justifyContent = 'center'
+    r.style.alignItems = 'center'
+    r.style.justifyItems = 'center'
 
-    const order = [[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3], [4,1], [4,2], [4,3]]
+    const order = [[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3],[4,3]]
+    const gridAreaOrder = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'ok']
     order.forEach((columnXrow, index) =>{
         const div = document.createElement('div')
         r.appendChild(div)
-        div.id = `buttonDiv${index +1}`
-        div.style.gridColumnStart = columnXrow[0]
-        div.style.gridRowStart = columnXrow[1]
+        div.id = `buttonDiv${gridAreaOrder[index]}`
+        div.style.gridArea = gridAreaOrder[index]
         div.style.display = 'grid'
         div.style.alignContent = 'center'
         div.style.justifyContent = 'center'
-        div.style.border = 'solid black 1px'
+        div.style.width = '23dvw'
+        div.style.height = '5dvh'
+        div.style.border = `solid black 1px`
+        div.style.borderRadius = '5%'
         const p = document.createElement('p')
         div.appendChild(p)
         p.style.margin = 0
-        p.innerHTML = `${index + 1}`
     })
+
+    const scoreDiv = document.createElement('div')
+    r.appendChild(scoreDiv)
+    scoreDiv.style.gridArea = 's'
+    scoreDiv.id = 'buttonDivScore'
+    scoreDiv.style.display = 'grid'
+    scoreDiv.style.alignContent = 'center'
+    scoreDiv.style.justifyContent = 'center'
+    scoreDiv.style.alignItems = 'center'
+    scoreDiv.style.justifyItems = 'center'
+    scoreDiv.style.width = '23dvw'
+    scoreDiv.style.height = '11dvh'
+    scoreDiv.style.border = `solid black 1px`
+    scoreDiv.style.borderRadius = '5%'
+    scoreDiv.style.fontSize = '6dvh'
 
     const unplacedSlotsList = function(){
         let r = [0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -114,32 +136,32 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
         })
         return r;
     }()
-    const divList = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    divList.forEach((value) =>{
-        const color = getHSLColorFromDuration(value)
-        r.querySelector(`#buttonDiv${value}`).innerHTML = `<span style = 'color:${color}'>\u25A0 (x${unplacedSlotsList[value - 1]})</span>`
+    const divList = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+    divList.forEach((value, index) =>{
+        const color = getHSLColorFromDuration(index + 1)
+        r.querySelector(`#buttonDiv${value}`).innerHTML = `<span style = 'color:${color}'>\u25A0 (x${unplacedSlotsList[index]})</span>`
         
     })
-    divList.forEach((value) =>{
+    divList.forEach((value, index) =>{
         r.querySelector(`#buttonDiv${value}`).addEventListener('pointerdown', (e)=>{
             if (canvasDescription.isThereAFloatingRectangle()){
                 return;
             }
-            if (unplacedSlotsList[value - 1] === 0){
+            if (unplacedSlotsList[index] === 0){
                 return;
             }
             const name = generateUniqueName.next().value
             const width = 0.18 * canvasDescription.width
-            const height = value * 0.09 * canvasDescription.height
+            const height = (index + 1) * 0.09 * canvasDescription.height
             const xPosition = (canvasDescription.width - width) * 0.5
             const yPosition = (canvasDescription.height - height) * 0.5
-            const color = getHSLColorFromDuration(value)
-            const scheduleData = {durationInHours: value}
+            const color = getHSLColorFromDuration(index + 1)
+            const scheduleData = {durationInHours: index + 1}
             gameData.canvasDescription.floatingRectangleData = gameData.canvasDescription.addRectangleToDataset(gameData.canvasDescription.floatingRectangleData, name, xPosition, yPosition, width, height, 'black', color, scheduleData)
             gameData.chemoSlotsDescription.unplacedSlots = function(){ // to refactor, put a method in gameData
                 let r = []
                 for (let i = 0; i< unplacedSlots.length ; i++){
-                    if(unplacedSlots[i] === value){
+                    if(unplacedSlots[i] === index + 1){
                         if (i === unplacedSlots.length-1){
                             return r = unplacedSlots.slice(0, i)
                         }
@@ -151,17 +173,19 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
     })
 
     const currentScore = checkMajorConstraints(gameData.canvasDescription.schedule.value) + 100* gameData.chemoSlotsDescription.unplacedSlots.length + 100*(gameData.canvasDescription.isThereAFloatingRectangle() ? 1 : 0)
-    r.querySelector(`#buttonDiv10`).innerHTML = `${currentScore}`
-    r.querySelector(`#buttonDiv10`).addEventListener('pointerdown', (e) =>{
-    })
+    r.querySelector(`#buttonDivScore`).innerHTML = `${currentScore}`
+    r.querySelector(`#buttonDivScore`).style.backgroundColor = function(){
+        if (currentScore > 100){
+            return 'paleTurquoise'
+        }
+        if (currentScore < gameData.bestFoundScore){
+            return 'lime'
+        }
+        return `hsl(150, 100%, ${50 + ((currentScore - gameData.bestFoundScore)/(gameData.worstFoundScore - gameData.bestFoundScore) )* 40}%)`
+    }()
 
-    r.querySelector(`#buttonDiv11`).innerHTML = `??`
-    r.querySelector(`#buttonDiv11`).addEventListener('pointerdown', (e) =>{
-        
-    })
-
-    r.querySelector(`#buttonDiv12`).innerHTML = `OK`
-    r.querySelector(`#buttonDiv12`).addEventListener('pointerdown', goToPuzzleModeGameOverScreen)
+    r.querySelector(`#buttonDivok`).innerHTML = `\u{1F44D}`
+    r.querySelector(`#buttonDivok`).addEventListener('pointerdown', goToPuzzleModeGameOverScreen)
 
     return r
 }
