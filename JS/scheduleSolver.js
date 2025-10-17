@@ -5,18 +5,8 @@ function greedySolve(slotlist, baseSchedule){
     
     const FIRST_START_TIME = 9
     const LAST_END_TIME = 19
-    const MAX_STACK_OVERFLOW = 10
     
-    function main(slotlist, baseSchedule = new Schedule(), stackCounter = 0){
-        if (stackCounter === MAX_STACK_OVERFLOW){
-            let maxSchedule = new Schedule()
-            for (let i = 9; i <= 18 ; i++){
-                for (let j = 1; j<=4; j++){
-                    maxSchedule.addChemoSlot(i, 1, j)
-                }
-            }
-            return maxSchedule
-        }
+    function main(slotlist, baseSchedule = new Schedule()){
         let solution = baseSchedule.copy()
 
         const sortedSlotList = slotlist.toSorted((a,b) => a - b)
@@ -49,8 +39,13 @@ function greedySolve(slotlist, baseSchedule){
             }()
             
             if (scheduleOptions.length === 0){
-                console.log('recursive call')
-                return main(slotlist, baseSchedule, stackCounter+1)
+                let maxSchedule = new Schedule()
+                for (let i = 9; i <= 18 ; i++){
+                    for (let j = 1; j<=4; j++){
+                        maxSchedule.addChemoSlot(i, 1, j)
+                    }
+                }
+                return maxSchedule
             }
             
             const ratedScheduleOptions = scheduleOptions.map((scheduleOption) =>{
@@ -96,7 +91,7 @@ function greedySolve(slotlist, baseSchedule){
         }
     }
 
-    console.log('solutionScore for best found solution:', checkMajorConstraints(r.value))
+    //console.log('solutionScore for best found solution:', checkMajorConstraints(r.value))
     return r;
 }
 
@@ -106,13 +101,8 @@ function reverseGreedySolve(slotlist, baseSchedule){
     
     const FIRST_START_TIME = 9
     const LAST_END_TIME = 19
-    const MAX_STACK_OVERFLOW = 10
-    
-    function main(slotlist, baseSchedule = new Schedule(), stackCounter = 0){
-        if (stackCounter === MAX_STACK_OVERFLOW){
-            let minSchedule = new Schedule()
-            return minSchedule
-        }
+
+    function main(slotlist, baseSchedule = new Schedule()){
         let solution = baseSchedule.copy()
 
         const sortedSlotList = slotlist.toSorted((a,b) => a - b)
@@ -145,8 +135,7 @@ function reverseGreedySolve(slotlist, baseSchedule){
             }()
             
             if (scheduleOptions.length === 0){
-                console.log('recursive call')
-                return main(slotlist, baseSchedule, stackCounter+1)
+                return baseSchedule.copy()
             }
            
             const ratedScheduleOptions = scheduleOptions.map((scheduleOption) =>{
@@ -191,6 +180,61 @@ function reverseGreedySolve(slotlist, baseSchedule){
         }
     }
 
-    console.log('solutionScore for worst found solution:', checkMajorConstraints(r.value))
+    //console.log('solutionScore for worst found solution:', checkMajorConstraints(r.value))
     return r;
 }
+
+function exactSolver(slotList, baseSchedule){
+    let r = new Schedule()
+    
+    const FIRST_START_TIME = 9
+    const LAST_END_TIME = 19
+    
+    const sortedSlotList = slotList.toSorted((a,b) => a - b)
+
+    /*debug*/ let complexityChecker = 0
+    function helper(sortedSlotList, currentSchedule, bestOf = {schedule: new Schedule(), score: 1000}){
+        if (sortedSlotList.length === 0){
+            const score = checkMajorConstraints(currentSchedule.value)
+            if (score < bestOf.score){
+                return {
+                    schedule: currentSchedule.copy(),
+                    score: score
+                }
+            }
+            else {return bestOf}
+        }
+        const list = [...sortedSlotList]
+        const currentSlot = list.pop()
+        const rooms = [1, 2, 3, 4]
+        const startingTimeOptions = [9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5]
+        rooms.forEach((room) =>{
+            startingTimeOptions.forEach((startingTime) =>{
+                if (startingTime + currentSlot > LAST_END_TIME){
+                    return;
+                }
+                if (currentSchedule.checkIfDoubleBooking(startingTime, currentSlot, room)){
+                    return;
+                }
+                const scheduleOption = currentSchedule.copy()
+                scheduleOption.addChemoSlot(startingTime, currentSlot, room)
+                if (checkMajorConstraints(scheduleOption.value) >= bestOf.score){
+                    return
+                }
+                /*debug*/complexityChecker++
+                bestOf = helper(list, scheduleOption, bestOf)
+            })
+        })
+        return bestOf
+    }
+
+    const greedySolveSchedule = greedySolve(slotList, baseSchedule)
+    const scoreToBeat = checkMajorConstraints(greedySolveSchedule.value)
+    const bestOf = helper(sortedSlotList, baseSchedule.copy(), {schedule: greedySolveSchedule.copy(), score: scoreToBeat})
+    r = bestOf.schedule.copy()
+    //console.log('best found solution with exact solver was', bestOf.score)
+    ///*debug*/console.log('complexityChecker was ', complexityChecker)
+
+    return r;
+}
+
