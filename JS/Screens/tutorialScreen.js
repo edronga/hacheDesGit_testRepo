@@ -89,7 +89,7 @@ function* gen_getNextTutorialData(){
     const plot = [
         {
             isOver: false,
-            text: `Il faut essayer d'optimiser le planning au maximum :<br>4 boxs, 1 infirmier(e), des horaires de m***e, quelques contraintes.`,
+            text: `Il faut essayer d'optimiser le planning au maximum :<br>4 boxs, 1 infirmier(e), des horaires de m***e (9h-19h), quelques contraintes.`,
             canvasDescription: new CanvasDescription(generateRandomSchedule(16), new Schedule(), window.innerWidth, window.innerHeight*0.8)
         },
         {
@@ -141,8 +141,7 @@ function* gen_getNextTutorialData(){
             isOver: false,
             text: `Score de pénalité :
             <br>+1 si >3 patients sur le même créneau
-            <br>+1 si 2 patients débutent en même temps
-            <br>+1 si 2 patients terminent en même temps
+            <br>+1 si 2 patients débutent ou terminent en même temps
             <br>+1 si un patient débute alors qu'un autre patient termine dans 30 min`,
             canvasDescription: function(){
                 const fixedSchedule = new Schedule()
