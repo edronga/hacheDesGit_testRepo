@@ -162,7 +162,7 @@ function generateSlotlist(difficulty, baseSchedule = new Schedule()){
             case 'medium':
                 return (sortedList.length >= 5) ? sortedList.toSpliced(5) : sortedList;
             case 'hard' :
-                return (sortedList.length >= 8) ? sortedList.toSpliced(8) : sortedList;
+                return (sortedList.length >= 7) ? sortedList.toSpliced(7) : sortedList;
             default:
                 return sortedList
         }

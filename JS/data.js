@@ -7,6 +7,7 @@ let gameData = {
         this.colorTheme = random
     },
     getCurrentPage: function(){},
+    gameMode: '',
     canvasDescription: {},
     chemoSlotsDescription: {
         completeList: [],
@@ -39,8 +40,10 @@ let gameData = {
                 break;
 
             case 'hard':
-                fixedSchedule = generateRandomSchedule(3)
-                slotlist = generateSlotlist('hard', fixedSchedule)
+                data = getDifficultToSolveProblem('hard')
+                fixedSchedule = new Schedule()
+                fixedSchedule.value = data.fixedSchedule.value
+                slotlist = data.slotlist
                 break;
 
             default: // case 'custom'
@@ -94,5 +97,13 @@ let gameData = {
             hasEqualized: 0,
             hasBeaten: 0
         }
-    }
+    },
+    playRecordedDataScreen: {
+        data : {
+            dataSourceGeneratorFunction: function(){},
+            canvasDescription: {},
+            next: function(){},
+            bestFoundScore: 0,
+            worstFoundScore: 0
+        }}
 }

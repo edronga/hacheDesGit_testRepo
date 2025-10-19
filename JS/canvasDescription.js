@@ -229,7 +229,8 @@ class CanvasDescription {
             const strokeStyle = floatingRectangleData[name].strokeStyle
             const durationInHours = floatingRectangleData[name].scheduleData.durationInHours
             ctx.fillStyle = getHSLColorFromDuration(durationInHours, 100, 75)
-            ctx.strokeStyle = strokeStyle
+            ctx.lineWidth = 2
+            ctx.strokeStyle = 'darkRed'
             ctx.fillRect(x, y, w, h)
             ctx.strokeRect(x, y, w, h)
         })

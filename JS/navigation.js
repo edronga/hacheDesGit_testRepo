@@ -19,21 +19,25 @@ function goToPuzzleModeDifficultySelection (){
 }
 
 function goToPuzzleModeGameEasy () {
+    gameData.gameMode = 'puzzle'
     gameData.getCurrentPage = oneDayPuzzleModeScreen
     gameData.initialize('easy')
 }
 
 function goToPuzzleModeGameMedium (){
+    gameData.gameMode = 'puzzle'
     gameData.getCurrentPage = oneDayPuzzleModeScreen
     gameData.initialize('medium')
 }
 
 function goToPuzzleModeGameHard (){
+    gameData.gameMode = 'puzzle'
     gameData.getCurrentPage = oneDayPuzzleModeScreen
     gameData.initialize('hard')
 }
 
 function goToPuzzleModeGameCustomDifficulty (){
+    gameData.gameMode = 'puzzle'
     gameData.getCurrentPage = oneDayPuzzleModeScreen
     gameData.initialize('custom')
 }
@@ -44,6 +48,43 @@ function goToPuzzleModeGameOverScreen () {
 }
 
 function goToStoryModeScreen(){
-    gameData.getCurrentPage = storyModeScreen
+    gameData.gameMode = 'story'
+    storyNavigation.storyScreenCursor = 0
+    gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
+    gameData.initialize('easy')
+}
+
+
+const storyNavigation = {
+    currentScreen: function(){},
+    goToNextStoryScreen: function(){
+        const currentChapter = this.storyScreenCursor
+        this.storyScreenCursor++
+        return this.storyScreenSuccession[currentChapter]
+    },
+    storyScreenSuccession:[
+        function() {return storyModeIntroTemplate('lundi')},
+        function() {return storyModeScreenTemplate(storyText['lundi'])},
+        function() {return oneDayPuzzleModeScreen()},
+        function() {return storyModeGameOverScreen()},
+        function() {return storyModeIntroTemplate('mardi')},
+        function() {return storyModeScreenTemplate(storyText['mardi'])},
+        function() {return oneDayPuzzleModeScreen()},
+        function() {return storyModeGameOverScreen()},
+        function() {return storyModeIntroTemplate('mercredi')},
+        function() {return storyModeScreenTemplate(storyText['mercredi'])},
+        function() {return oneDayPuzzleModeScreen()},
+        function() {return storyModeGameOverScreen()},
+        function() {return storyModeIntroTemplate('jeudi')},
+        function() {return storyModeScreenTemplate(storyText['jeudi'])},
+        function() {return oneDayPuzzleModeScreen()},
+        function() {return storyModeGameOverScreen()},
+        function() {return storyModeIntroTemplate('vendredi')},
+        function() {return storyModeScreenTemplate(storyText['vendredi'])},
+        function() {return oneDayPuzzleModeScreen()},
+        function() {return storyModeGameOverScreen()},
+        function() {return titleScreen()}
+    ],
+    storyScreenCursor: 0
 }
 
