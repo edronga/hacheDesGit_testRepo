@@ -9,6 +9,7 @@ function titleScreen(){
     r.style.display = 'grid'
     r.style.justifyContent = 'center'
     r.style.alignItems = 'center'
+    r.style.justifyItems = 'center'
     r.style.gridTemplate = `
     'a b c' 33dvw 
     'd e f' 33dvw
@@ -71,19 +72,12 @@ function titleScreen(){
     const bottomDiv = document.createElement('div')
     r.appendChild(bottomDiv)
     bottomDiv.style.gridArea = 'x'
-    bottomDiv.style.display = 'grid'
-    bottomDiv.style.gridTemplate = `
-    'a' 66%
-    'b' 34% / 100dvw
-    `
-    const titleDiv = document.createElement('div')
-    bottomDiv.appendChild(titleDiv)
-    titleDiv.style.width = '100dvw'
-    titleDiv.style.height = '100%'
-    titleDiv.style.display = 'flex'
-    titleDiv.style.justifyContent = 'center'
-    titleDiv.style.alignItems = 'center'
-    titleDiv.innerHTML = `<p>logo/titre??<p>`
+    bottomDiv.style.width = '65%'
+    bottomDiv.style.height = '90%'
+    myStyle.addBackgroundImage('Images/titleImage.png', bottomDiv.style)
+    bottomDiv.style.backgroundSize = 'cover'
+    bottomDiv.style.border = 'solid black 3px'
+    bottomDiv.style.borderRadius = '5%'
 
     r.addEventListener('pointerdown', goToMenu)
 

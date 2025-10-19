@@ -74,6 +74,8 @@ function oneDayPuzzleModeScreen(canvasDescription = gameData.canvasDescription){
         canvasDescription.ungrabFloatingRectangle()
     })
 
+    /*for recording purposes*/ recordData.loopTracker()
+
     return r;
 }
 
@@ -140,6 +142,9 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
     divList.forEach((value, index) =>{
         const color = getHSLColorFromDuration(index + 1)
         r.querySelector(`#buttonDiv${value}`).innerHTML = `<span style = 'color:${color}'>\u25A0 (x${unplacedSlotsList[index]})</span>`
+        if (unplacedSlotsList[index] > 0){
+            r.querySelector(`#buttonDiv${value}`).style.backgroundColor = `${getHSLColorFromDuration(index+1, 75, 95)}`
+        }
         
     })
     divList.forEach((value, index) =>{
@@ -178,14 +183,27 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
         if (currentScore > 100){
             return 'paleTurquoise'
         }
-        if (currentScore < gameData.bestFoundScore){
-            return 'lime'
+        if (currentScore <  gameData.bestFoundScore ){
+            return 'yellow'
         }
-        return `hsl(150, 100%, ${50 + ((currentScore - gameData.bestFoundScore)/(gameData.worstFoundScore - gameData.bestFoundScore) )* 40}%)`
+        if (currentScore - gameData.bestFoundScore <= 3){
+            return `hsl(130, 100%, ${50 + (currentScore - gameData.bestFoundScore)* 10}%)`
+        }
+        return `hsl(130, 75%, ${80 + ((currentScore - 3 - gameData.bestFoundScore)/(gameData.worstFoundScore - 3 - gameData.bestFoundScore) )* 20}%)`
     }()
 
     r.querySelector(`#buttonDivok`).innerHTML = `\u{1F44D}`
-    r.querySelector(`#buttonDivok`).addEventListener('pointerdown', goToPuzzleModeGameOverScreen)
+    r.querySelector(`#buttonDivok`).addEventListener('pointerdown', () =>{
+        if (gameData.gameMode === 'puzzle'){
+            goToPuzzleModeGameOverScreen()
+            return;
+        }
+        if (gameData.gameMode === 'story'){
+            gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
+            return;
+        }
+    }
+    )
 
     return r
 }

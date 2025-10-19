@@ -44,8 +44,7 @@ function menuScreen() {
 
     divTuto.addEventListener('pointerdown', () =>{
         const text = `C'est un jeu d'optimisation de planning.<br/>L'objectif est d'obtenir un score aussi bon voire meilleur que notre logiciel d'optimisation Intelligente en oncologie.<br>(Il s'appelle loIo)`
-        const fullSchedule = generateRandomSchedule(16)
-        const canvasDescription = new CanvasDescription(fullSchedule, new Schedule(), window.innerWidth, window.innerHeight*0.8)
+        const canvasDescription = new CanvasDescription(new Schedule(), new Schedule(), window.innerWidth, window.innerHeight*0.8)
         goToTutorialScreen(text, canvasDescription)
     })
 

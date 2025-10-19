@@ -45,11 +45,6 @@ function tutorialScreen(text, canvasDescription){
     textValue.style.marginLeft = '5px'
     textValue.style.marginTop = '0px'
     textValue.style.marginBottom = '0px'
-    textValue.style.display = 'flex'
-    textValue.style.justifyContent = 'center'
-    textValue.style.justifyContent = 'center'
-    textValue.style.alignContent = 'center'
-    textValue.style.alignItems = 'center'
 
     imgArea.style.height = '100%'
     imgArea.style.width = '20%'
@@ -63,14 +58,26 @@ function tutorialScreen(text, canvasDescription){
 
     r.addEventListener('pointerdown', () =>{
         const data = getNextTutorialData.next().value
-        const isOver = data.isOver
-        if (isOver){
+        const next = data.next
+        const text = data.text
+        const canvasDescription = data.canvasDescription
+        if (next === 'over'){
             getNextTutorialData = gen_getNextTutorialData()
             goToMenu()
             return
         }
-        const text = data.text
-        const canvasDescription = data.canvasDescription
+        if (next === 'recordedScreen'){
+            const dataSource = data.dataSourceForRecordedScreen
+            gameData.playRecordedDataScreen.data.dataSourceGeneratorFunction = gen_dataSourceGeneratorFunction(dataSource)
+            gameData.playRecordedDataScreen.data.next = function (){
+                const nextData = getNextTutorialData.next().value
+                return goToTutorialScreen(nextData.text, nextData.canvasDescription)
+            }
+            gameData.playRecordedDataScreen.data.canvasDescription = canvasDescription
+            gameData.getCurrentPage = playRecordedDataScreen
+            return
+        }
+
         goToTutorialScreen(text, canvasDescription)
     })
 
@@ -81,20 +88,21 @@ function tutorialScreen(text, canvasDescription){
 let getNextTutorialData = gen_getNextTutorialData()
 function* gen_getNextTutorialData(){
     let r = {
-        isOver: false,
+        next: '',
         text: '',
         canvasDescription: new CanvasDescription(new Schedule(), new Schedule(), window.innerWidth, window.innerHeight*0.8)
     }
 
     const plot = [
         {
-            isOver: false,
-            text: `Il faut essayer d'optimiser le planning au maximum :<br>4 boxs, 1 infirmier(e), des horaires de m***e (9h-19h), quelques contraintes.`,
+            next: '',
+            text: `Généralités sur le planning :<br>4 boxs, 1 infirmier(e), des horaires de m***e (9h-19h), pleins de patients, pleins de temps de prise en charge différents.`,
             canvasDescription: new CanvasDescription(generateRandomSchedule(16), new Schedule(), window.innerWidth, window.innerHeight*0.8)
         },
         {
-            isOver: false,
-            text: `Sur le planning idéal, on souhaiterait au max 3 patients en même temps pour un(e) infirmier(e), et un ratio 1 pour 1 sur les 30 premières minutes et les 30 dernières minutes de prise en charge.`,
+            next: '',
+            text: `Voici un exemple de planning idéal :<br> 
+            on a au plus 3 patients en même temps pour un(e) infirmier(e), et un ratio 1 pour 1 sur les 30 premières minutes et les 30 dernières minutes de prise en charge.`,
             canvasDescription: function(){
                 const perfectSchedule = function(){
                     const listOfPerfectSchedules =[
@@ -138,15 +146,15 @@ function* gen_getNextTutorialData(){
             }()
         },
         {
-            isOver: false,
+            next: '',
             text: `Score de pénalité :
             <br>+1 si >3 patients sur le même créneau
             <br>+1 si 2 patients débutent ou terminent en même temps
             <br>+1 si un patient débute alors qu'un autre patient termine dans 30 min`,
             canvasDescription: function(){
                 const fixedSchedule = new Schedule()
-                fixedSchedule.addChemoSlot(10, 8, 1)
-                fixedSchedule.addChemoSlot(11, 3, 2)
+                fixedSchedule.addChemoSlot(11, 7, 1)
+                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
                 fixedSchedule.addChemoSlot(12, 3, 3)
                 fixedSchedule.addChemoSlot(15.5, 2, 2)
                 const badSchedule = fixedSchedule.copy()
@@ -158,8 +166,162 @@ function* gen_getNextTutorialData(){
             }()
         },
         {
-            isOver: false,
-            text: `L'objectif est d'avoir le score le plus bas possible <br>Bon courage !`,
+            next: '',
+            text: `Planning ci-dessus : score de pénalité = <b style = "color: red">5</b> :
+            <br>- >3 patients sur le même créneau : <b style = "color: red">+1 +1</b>
+            <br>- 2 patients débutent ou terminent en même temps : <b style = "color: red">+1 +1</b>
+            <br>- un patient débute alors qu'un autre patient termine dans 30 min : <b style = "color: red">+1</b>` ,
+            canvasDescription: function(){
+                const fixedSchedule = new Schedule()
+                fixedSchedule.addChemoSlot(11, 7, 1)
+                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
+                fixedSchedule.addChemoSlot(12, 3, 3)
+                fixedSchedule.addChemoSlot(15.5, 2, 2)
+                const badSchedule = fixedSchedule.copy()
+                badSchedule.addChemoSlot(12.5, 1, 4)
+                badSchedule.addChemoSlot(15.5, 1, 3)
+                badSchedule.addChemoSlot(16.5, 1, 3)
+                badSchedule.addChemoSlot(17.5, 1, 4)
+                return new CanvasDescription(badSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
+            }()
+        },
+        {
+            next: '',
+            text: `Bon, comme c'est évident que tu n'as rien compris, voici un exemple...`,
+            canvasDescription: function(){
+                const fixedSchedule = new Schedule()
+                fixedSchedule.addChemoSlot(11, 7, 1)
+                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
+                fixedSchedule.addChemoSlot(12, 3, 3)
+                fixedSchedule.addChemoSlot(15.5, 2, 2)
+                const badSchedule = fixedSchedule.copy()
+                badSchedule.addChemoSlot(12.5, 1, 4)
+                badSchedule.addChemoSlot(15.5, 1, 3)
+                badSchedule.addChemoSlot(16.5, 1, 3)
+                badSchedule.addChemoSlot(17.5, 1, 4)
+                return new CanvasDescription(badSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
+            }(),
+        },
+        {
+            next: 'recordedScreen',
+            text: ``,
+            canvasDescription: function(){
+                const fixedSchedule = new Schedule()
+                fixedSchedule.addChemoSlot(11, 7, 1)
+                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
+                fixedSchedule.addChemoSlot(12, 3, 3)
+                fixedSchedule.addChemoSlot(15.5, 2, 2)
+                const badSchedule = fixedSchedule.copy()
+                badSchedule.addChemoSlot(12.5, 1, 4)
+                badSchedule.addChemoSlot(15.5, 1, 3)
+                badSchedule.addChemoSlot(16.5, 1, 3)
+                badSchedule.addChemoSlot(17.5, 1, 4)
+                gameData.playRecordedDataScreen.data.bestFoundScore = checkMajorConstraints(greedySolve([1, 1, 1, 1], fixedSchedule).value)
+                gameData.playRecordedDataScreen.data.worstFoundScore = checkMajorConstraints(reverseGreedySolve([1, 1, 1, 1], fixedSchedule).value)
+                return new CanvasDescription(badSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
+            }(),
+            dataSourceForRecordedScreen: myRecordedData[0]
+        },
+        {
+            next: '',
+            text: `Score de pénalité = <b style = "color: orange">3</b> :
+            <br>- >3 patients sur le même créneau : <b style = "color: green">+0</b>
+            <br>- 2 patients débutent ou terminent en même temps : <b style = "color: red">+1 +1</b>
+            <br>- un patient débute alors qu'un autre patient termine dans 30 min : <b style = "color: red">+1</b>` ,
+            canvasDescription: function(){
+                const fixedSchedule = new Schedule()
+                fixedSchedule.addChemoSlot(11, 7, 1)
+                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
+                fixedSchedule.addChemoSlot(12, 3, 3)
+                fixedSchedule.addChemoSlot(15.5, 2, 2)
+                const badSchedule = fixedSchedule.copy()
+                badSchedule.addChemoSlot(9, 1, 4)
+                badSchedule.addChemoSlot(15.5, 1, 3)
+                badSchedule.addChemoSlot(16.5, 1, 3)
+                badSchedule.addChemoSlot(17.5, 1, 4)
+                return new CanvasDescription(badSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
+            }()
+        },
+        {
+            next: 'recordedScreen',
+            text: ``,
+            canvasDescription: function(){
+                const fixedSchedule = new Schedule()
+                fixedSchedule.addChemoSlot(11, 7, 1)
+                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
+                fixedSchedule.addChemoSlot(12, 3, 3)
+                fixedSchedule.addChemoSlot(15.5, 2, 2)
+                const badSchedule = fixedSchedule.copy()
+                badSchedule.addChemoSlot(9, 1, 4)
+                badSchedule.addChemoSlot(15.5, 1, 3)
+                badSchedule.addChemoSlot(16.5, 1, 3)
+                badSchedule.addChemoSlot(17.5, 1, 4)
+                return new CanvasDescription(badSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
+            }(),
+            dataSourceForRecordedScreen: myRecordedData[1]
+        },
+        {
+            next: '',
+            text: `Score de pénalité = <b style = "color: yellowGreen">1</b> :
+            <br>- >3 patients sur le même créneau : <b style = "color: green">+0</b>
+            <br>- 2 patients débutent ou terminent en même temps : <b style = "color: green">+0 +0</b>
+            <br>- un patient débute alors qu'un autre patient termine dans 30 min : <b style = "color: red">+1</b>` ,
+            canvasDescription: function(){
+                const fixedSchedule = new Schedule()
+                fixedSchedule.addChemoSlot(11, 7, 1)
+                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
+                fixedSchedule.addChemoSlot(12, 3, 3)
+                fixedSchedule.addChemoSlot(15.5, 2, 2)
+                const badSchedule = fixedSchedule.copy()
+                badSchedule.addChemoSlot(9, 1, 4)
+                badSchedule.addChemoSlot(10, 1, 2)
+                badSchedule.addChemoSlot(16, 1, 3)
+                badSchedule.addChemoSlot(17.5, 1, 4)
+                return new CanvasDescription(badSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
+            }()
+        },
+        {
+            next: 'recordedScreen',
+            text: ``,
+            canvasDescription: function(){
+                const fixedSchedule = new Schedule()
+                fixedSchedule.addChemoSlot(11, 7, 1)
+                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
+                fixedSchedule.addChemoSlot(12, 3, 3)
+                fixedSchedule.addChemoSlot(15.5, 2, 2)
+                const badSchedule = fixedSchedule.copy()
+                badSchedule.addChemoSlot(9, 1, 4)
+                badSchedule.addChemoSlot(10, 1, 2)
+                badSchedule.addChemoSlot(16, 1, 3)
+                badSchedule.addChemoSlot(17.5, 1, 4)
+                return new CanvasDescription(badSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
+            }(),
+            dataSourceForRecordedScreen: myRecordedData[2]
+        },
+        {
+            next: '',
+            text: `Score de pénalité = <b style = "color: green">0</b> :
+            <br>- >3 patients sur le même créneau : <b style = "color: green">+0</b>
+            <br>- 2 patients débutent ou terminent en même temps : <b style = "color: green">+0 +0</b>
+            <br>- un patient débute alors qu'un autre patient termine dans 30 min : <b style = "color: green">+0</b>` ,
+            canvasDescription: function(){
+                const fixedSchedule = new Schedule()
+                fixedSchedule.addChemoSlot(11, 7, 1)
+                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
+                fixedSchedule.addChemoSlot(12, 3, 3)
+                fixedSchedule.addChemoSlot(15.5, 2, 2)
+                const badSchedule = fixedSchedule.copy()
+                badSchedule.addChemoSlot(9, 1, 4)
+                badSchedule.addChemoSlot(10, 1, 2)
+                badSchedule.addChemoSlot(16, 1, 3)
+                badSchedule.addChemoSlot(18, 1, 1)
+                return new CanvasDescription(badSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
+            }()
+        },
+        {
+            next: '',
+            text: `L'objectif est d'avoir le score le plus bas possible. Il y a aussi des médailles à collectionner : pour avoir participé (\u{1F610}), pour faire aussi bien que loIo (\u{1F642}), ou si tu fais encore mieux (\u{1F60E})!
+            <br>Bon courage !`,
             canvasDescription: function(){
                 const fixedSchedule = new Schedule()
                 const d1_4 = [9, 10, 12, 13, 17, 18]
@@ -187,7 +349,7 @@ function* gen_getNextTutorialData(){
             }()
         },
         {
-            isOver: true,
+            next: 'over',
             text: ``,
             canvasDescription: new CanvasDescription(new Schedule(), new Schedule(), window.innerWidth, window.innerHeight*0.8)
         }
@@ -197,9 +359,15 @@ function* gen_getNextTutorialData(){
     while (true){
         yield r = plot[i]
         
-        if(plot[i].isOver === false){
+        if(plot[i].next !== 'over'){
             i++
         }
     }
 
 }
+
+
+const myRecordedData = []
+myRecordedData[0] = [{"type":"pointerdown","x":322,"y":225.1999969482422,"numberOfEvents":1},{"type":null,"numberOfEvents":15},{"type":"pointermove","x":322,"y":224.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":322,"y":222.80003356933594,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":321.20001220703125,"y":220.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":321.20001220703125,"y":218,"numberOfEvents":1},{"type":"pointermove","x":320.3999938964844,"y":214.80003356933594,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":319.6000061035156,"y":211.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":318.8000183105469,"y":209.1999969482422,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":318.8000183105469,"y":204.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":318,"y":202,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":318,"y":198.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":318,"y":194.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":317.20001220703125,"y":191.60000610351562,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":317.20001220703125,"y":188.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":317.20001220703125,"y":185.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":317.20001220703125,"y":182.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":317.20001220703125,"y":179.60000610351562,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":317.20001220703125,"y":176.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":317.20001220703125,"y":174,"numberOfEvents":1},{"type":"pointermove","x":317.20001220703125,"y":170,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":317.20001220703125,"y":165.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":317.20001220703125,"y":161.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":317.20001220703125,"y":155.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":317.20001220703125,"y":150.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":316.3999938964844,"y":145.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":316.3999938964844,"y":139.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":315.6000061035156,"y":136.40000915527344,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":315.6000061035156,"y":133.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":315.6000061035156,"y":130.80003356933594,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":315.6000061035156,"y":128.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":315.6000061035156,"y":126.8000259399414,"numberOfEvents":1},{"type":"pointermove","x":315.6000061035156,"y":125.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":315.6000061035156,"y":122.8000259399414,"numberOfEvents":1},{"type":"pointermove","x":315.6000061035156,"y":120.4000015258789,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":315.6000061035156,"y":118.8000259399414,"numberOfEvents":1},{"type":"pointermove","x":315.6000061035156,"y":116.4000015258789,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":315.6000061035156,"y":114.8000259399414,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":111.5999984741211,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":110.8000259399414,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":108.4000015258789,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":106.8000259399414,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":104.4000015258789,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":102,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":100.40001678466797,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":98,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":95.60000610351562,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":94,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":91.60000610351562,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":90,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":88.40001678466797,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":86.80000305175781,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":84.40001678466797,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":83.60000610351562,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":81.20000457763672,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":80.40001678466797,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":79.60000610351562,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":78,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":76.40001678466797,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":75.60000610351562,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":74,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":73.20000457763672,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":72.40001678466797,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":71.60000610351562,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":70.80000305175781,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":70,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":69.20000457763672,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":68.40001678466797,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":67.60000610351562,"numberOfEvents":1},{"type":null,"numberOfEvents":3},{"type":"pointermove","x":314.8000183105469,"y":66.80000305175781,"numberOfEvents":1},{"type":"pointermove","x":314.8000183105469,"y":66,"numberOfEvents":1},{"type":null,"numberOfEvents":19},{"type":"pointerup","x":314.8000183105469,"y":66,"numberOfEvents":1},{"type":null,"numberOfEvents":30},{"type":"over","numberOfEvents":1}]
+myRecordedData[1] = [{"type":"pointerdown","x":239.60000610351562,"y":373.20001220703125,"numberOfEvents":1},{"type":"pointerdown","x":239.60000610351562,"y":373.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":13},{"type":"pointermove","x":237.1999969482422,"y":362.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":237.1999969482422,"y":362.8000183105469,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":230.80003356933594,"y":346.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":230.80003356933594,"y":346.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":223.60000610351562,"y":322,"numberOfEvents":1},{"type":"pointermove","x":223.60000610351562,"y":322,"numberOfEvents":1},{"type":"pointermove","x":215.60000610351562,"y":299.6000061035156,"numberOfEvents":1},{"type":"pointermove","x":215.60000610351562,"y":299.6000061035156,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":210.80003356933594,"y":286,"numberOfEvents":1},{"type":"pointermove","x":210.80003356933594,"y":286,"numberOfEvents":1},{"type":"pointermove","x":206.80003356933594,"y":273.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":206.80003356933594,"y":273.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":202,"y":262,"numberOfEvents":1},{"type":"pointermove","x":202,"y":262,"numberOfEvents":1},{"type":"pointermove","x":198.80003356933594,"y":252.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":198.80003356933594,"y":252.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":195.60000610351562,"y":244.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":195.60000610351562,"y":244.40000915527344,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":193.20001220703125,"y":237.1999969482422,"numberOfEvents":1},{"type":"pointermove","x":193.20001220703125,"y":237.1999969482422,"numberOfEvents":1},{"type":"pointermove","x":190,"y":230,"numberOfEvents":1},{"type":"pointermove","x":190,"y":230,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":187.60000610351562,"y":225.1999969482422,"numberOfEvents":1},{"type":"pointermove","x":187.60000610351562,"y":225.1999969482422,"numberOfEvents":1},{"type":"pointermove","x":186,"y":219.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":186,"y":219.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":184.40000915527344,"y":214,"numberOfEvents":1},{"type":"pointermove","x":184.40000915527344,"y":214,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":182,"y":209.1999969482422,"numberOfEvents":1},{"type":"pointermove","x":182,"y":209.1999969482422,"numberOfEvents":1},{"type":"pointermove","x":181.20001220703125,"y":203.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":181.20001220703125,"y":203.60000610351562,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":180.40000915527344,"y":197.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":180.40000915527344,"y":197.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":178,"y":190,"numberOfEvents":1},{"type":"pointermove","x":178,"y":190,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":178,"y":182.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":178,"y":182.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":177.20001220703125,"y":177.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":177.20001220703125,"y":177.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":176.40000915527344,"y":173.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":176.40000915527344,"y":173.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":175.60000610351562,"y":169.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":175.60000610351562,"y":169.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":175.60000610351562,"y":166,"numberOfEvents":1},{"type":"pointermove","x":175.60000610351562,"y":166,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":174.80003356933594,"y":163.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":174.80003356933594,"y":163.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":174,"y":161.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":174,"y":161.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":173.20001220703125,"y":159.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":173.20001220703125,"y":159.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":173.20001220703125,"y":157.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":173.20001220703125,"y":157.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":173.20001220703125,"y":155.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":173.20001220703125,"y":155.60000610351562,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":172.40000915527344,"y":154,"numberOfEvents":1},{"type":"pointermove","x":172.40000915527344,"y":154,"numberOfEvents":1},{"type":"pointermove","x":172.40000915527344,"y":152.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":172.40000915527344,"y":152.40000915527344,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":172.40000915527344,"y":150.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":172.40000915527344,"y":150.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":172.40000915527344,"y":150,"numberOfEvents":1},{"type":"pointermove","x":172.40000915527344,"y":150,"numberOfEvents":1},{"type":"pointermove","x":172.40000915527344,"y":148.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":172.40000915527344,"y":148.40000915527344,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":146.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":146.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":146,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":146,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":144.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":144.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":142.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":142.80003356933594,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":141.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":141.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":139.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":139.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":138.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":138.80003356933594,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":137.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":137.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":134.80003356933594,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":134.80003356933594,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":134,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":134,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":132.40000915527344,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":132.40000915527344,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":131.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":131.60000610351562,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":130,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":130,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":127.5999984741211,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":127.5999984741211,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":126.8000259399414,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":126.8000259399414,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":124.4000015258789,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":124.4000015258789,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":122,"numberOfEvents":1},{"type":"pointermove","x":170.80003356933594,"y":122,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":120.4000015258789,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":120.4000015258789,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":118.8000259399414,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":118.8000259399414,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":118,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":118,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":117.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":117.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":115.5999984741211,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":115.5999984741211,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":114.8000259399414,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":114.8000259399414,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":114,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":114,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":113.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":113.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":112.4000015258789,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":112.4000015258789,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":111.5999984741211,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":111.5999984741211,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":110.8000259399414,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":110.8000259399414,"numberOfEvents":1},{"type":null,"numberOfEvents":2},{"type":"pointermove","x":171.60000610351562,"y":110,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":110,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":109.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":109.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":108.4000015258789,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":108.4000015258789,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":107.5999984741211,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":107.5999984741211,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":106.8000259399414,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":106.8000259399414,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":172.40000915527344,"y":106.8000259399414,"numberOfEvents":1},{"type":"pointermove","x":172.40000915527344,"y":106.8000259399414,"numberOfEvents":1},{"type":null,"numberOfEvents":21},{"type":"pointerup","x":172.40000915527344,"y":106.8000259399414,"numberOfEvents":1},{"type":"pointerup","x":172.40000915527344,"y":106.8000259399414,"numberOfEvents":1},{"type":null,"numberOfEvents":75},{"type":"pointerdown","x":251.60000610351562,"y":414.8000183105469,"numberOfEvents":1},{"type":"pointerdown","x":251.60000610351562,"y":414.8000183105469,"numberOfEvents":1},{"type":null,"numberOfEvents":16},{"type":"pointermove","x":251.60000610351562,"y":414,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":414,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":413.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":413.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":412.3999938964844,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":412.3999938964844,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":411.6000671386719,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":411.6000671386719,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":410.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":410.8000183105469,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":409.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":409.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":408.4000244140625,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":408.4000244140625,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":406.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":406.8000183105469,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":405.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":405.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":403.6000671386719,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":403.6000671386719,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":402.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":402.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":402,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":402,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":401.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":401.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":400.4000244140625,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":400.4000244140625,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":399.6000671386719,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":399.6000671386719,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":398.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":398.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":398,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":398,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":397.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":397.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":396.4000244140625,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":396.4000244140625,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":394.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":394.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":394,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":394,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":392.4000244140625,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":392.4000244140625,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":391.6000671386719,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":391.6000671386719,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":390.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":390.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":390,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":390,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":389.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":389.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":388.4000244140625,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":388.4000244140625,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":387.6000671386719,"numberOfEvents":1},{"type":"pointermove","x":251.60000610351562,"y":387.6000671386719,"numberOfEvents":1},{"type":null,"numberOfEvents":8},{"type":"pointerup","x":251.60000610351562,"y":387.6000671386719,"numberOfEvents":1},{"type":"pointerup","x":251.60000610351562,"y":387.6000671386719,"numberOfEvents":1},{"type":null,"numberOfEvents":30},{"type":"over","numberOfEvents":1}]
+myRecordedData[2] = [{"type":"pointerdown","x":318,"y":455.6000671386719,"numberOfEvents":1},{"type":null,"numberOfEvents":12},{"type":"pointermove","x":310.8000183105469,"y":457.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":299.6000061035156,"y":460.3999938964844,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":287.6000061035156,"y":462.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":278,"y":464.3999938964844,"numberOfEvents":1},{"type":"pointermove","x":271.6000061035156,"y":466,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":266,"y":466.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":260.3999938964844,"y":467.6000671386719,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":254,"y":470,"numberOfEvents":1},{"type":"pointermove","x":248.40000915527344,"y":470.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":242.80003356933594,"y":471.6000671386719,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":236.40000915527344,"y":471.6000671386719,"numberOfEvents":1},{"type":"pointermove","x":228.40000915527344,"y":474,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":221.1999969482422,"y":474.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":214,"y":475.6000671386719,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":210,"y":476.3999938964844,"numberOfEvents":1},{"type":"pointermove","x":206,"y":476.3999938964844,"numberOfEvents":1},{"type":"pointermove","x":201.20001220703125,"y":477.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":198.80003356933594,"y":477.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":194.80003356933594,"y":477.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":191.60000610351562,"y":478,"numberOfEvents":1},{"type":"pointermove","x":188.40000915527344,"y":478,"numberOfEvents":1},{"type":"pointermove","x":184.40000915527344,"y":478.8000183105469,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":181.20001220703125,"y":478.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":177.20001220703125,"y":478.8000183105469,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":174,"y":478.8000183105469,"numberOfEvents":1},{"type":"pointermove","x":171.60000610351562,"y":479.6000671386719,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":168.40000915527344,"y":479.6000671386719,"numberOfEvents":1},{"type":"pointermove","x":165.20001220703125,"y":480.3999938964844,"numberOfEvents":1},{"type":"pointermove","x":162.80003356933594,"y":480.3999938964844,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":161.20001220703125,"y":481.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":158.80003356933594,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":156.40000915527344,"y":481.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":155.60000610351562,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":154,"y":481.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":153.20001220703125,"y":481.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":152.40000915527344,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":151.60000610351562,"y":481.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":150.80003356933594,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":150,"y":481.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":149.20001220703125,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":147.60000610351562,"y":481.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":146.80003356933594,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":146,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":145.20001220703125,"y":481.20001220703125,"numberOfEvents":1},{"type":"pointermove","x":144.40000915527344,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":143.60000610351562,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":142.80003356933594,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":2},{"type":"pointermove","x":142,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":141.20001220703125,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":1},{"type":"pointermove","x":140.40000915527344,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":2},{"type":"pointermove","x":139.60000610351562,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":12},{"type":"pointerup","x":139.60000610351562,"y":481.20001220703125,"numberOfEvents":1},{"type":null,"numberOfEvents":30},{"type":"over","numberOfEvents":1}]
