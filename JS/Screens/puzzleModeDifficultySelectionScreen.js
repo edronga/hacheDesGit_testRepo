@@ -10,6 +10,8 @@ function puzzleModeDifficultySelectionScreen(){
     r.style.justifyContent = 'center'
     r.style.alignItems = 'center'
     r.style.gap = '2dvh'
+    const colorAngle = menuColorAnimation.next().value
+    r.style.background = `hsl(${(colorAngle <= 180) ? colorAngle + 190 : colorAngle - 170} 100% 50%)`
 
     const easyDiv = document.createElement('div')
     r.appendChild(easyDiv)
@@ -36,6 +38,7 @@ function puzzleModeDifficultySelectionScreen(){
         element.style.display = 'flex'
         element.style.justifyContent = 'center'
         element.style.alignItems = 'center'
+        element.style.backgroundColor = 'white'
     })
     Array.from(r.getElementsByTagName('p')).forEach((element) =>{
         element.style.margin = 0

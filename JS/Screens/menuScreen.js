@@ -10,6 +10,9 @@ function menuScreen() {
     r.style.justifyContent = 'center'
     r.style.alignItems = 'center'
     r.style.gap = '2dvh'
+    const colorAngle = menuColorAnimation.next().value
+    const complimentaryColorAngle = (colorAngle <= 180) ? colorAngle + 180 : colorAngle - 180 ;
+    r.style.backgroundColor = `hsl(${colorAngle} 75% 95%)`
 
     const divTuto = document.createElement('div')
     r.appendChild(divTuto)
@@ -28,7 +31,7 @@ function menuScreen() {
     highScores.innerHTML = '<p>Médailles</p>'
 
     const group = [divTuto, divPuzzle, storyMode, highScores]
-    group.forEach((element) =>{
+    group.forEach((element, index) =>{
         element.style.width = '80dvw'
         element.style.height = '20dvh'
         element.style.border = `5px solid black`
@@ -36,7 +39,7 @@ function menuScreen() {
         element.style.display = 'flex'
         element.style.justifyContent = 'center'
         element.style.alignItems = 'center'
-        element.style.backgroundColor = 'white'
+        element.style.backgroundColor = `hsl(${complimentaryColorAngle + index*20} 100% 75%)`
     })
     Array.from(r.getElementsByTagName('p')).forEach((element) =>{
         element.style.margin = 0
@@ -57,4 +60,19 @@ function menuScreen() {
 
 
     return r;
+}
+
+let menuColorAnimation = gen_menuColorAnimation(10000)
+function* gen_menuColorAnimation(animationTime){
+    let referenceTime = Date.now()
+    const frameDuration = animationTime/360
+    let colorAngle = 180
+
+    while(true){
+        if (Date.now() - referenceTime >= frameDuration){
+            colorAngle = (colorAngle === 360) ? 0 : colorAngle + 1;
+            referenceTime = Date.now()
+        }
+        yield colorAngle
+    }
 }

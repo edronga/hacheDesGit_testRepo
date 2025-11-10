@@ -139,7 +139,7 @@ function getRecordedDataScreenButtonsDivContent(HEIGHT, WIDTH, canvasDescription
         
     })
 
-    const currentScore = checkMajorConstraints(gameData.playRecordedDataScreen.data.canvasDescription.schedule.value) 
+    const currentScore = checkMajorConstraints(gameData.playRecordedDataScreen.data.canvasDescription.schedule.value)
     const bestScore = gameData.playRecordedDataScreen.data.bestFoundScore
     const worstScore = gameData.playRecordedDataScreen.data.worstFoundScore
     r.querySelector(`#buttonDivScore`).innerHTML = `${currentScore}`

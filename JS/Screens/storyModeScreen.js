@@ -50,8 +50,6 @@ function storyModeScreenTemplate(textTable){
     r.style.width = '100dvw'
     r.style.display = 'flex'
     r.style.flexDirection = 'column'
-    r.style.alignContent = 'center'
-    r.style.alignItems = 'center'
 
     let textDiv = []
     let textContent = []
@@ -69,21 +67,31 @@ function storyModeScreenTemplate(textTable){
         textDiv[index].appendChild(textContent[index])
         textContent[index].innerHTML = textData
 
+
         textDiv[index].style.display = 'flex'
+        textDiv[index].style.border = 'solid black 1px'
+        textDiv[index].style.width = function(){
+            const t = {'narrator': '90dvw', 'protagonist': '60dvw'}
+            return (t[character] === undefined) ? '60dvw': t[character];
+
+        }()
+        textDiv[index].style.backgroundColor = function(){
+            const t = {'narrator': 'white', 'protagonist': 'pink'}
+            return (t[character] === undefined) ? 'lightBlue': t[character];
+
+        }()
         const contentJustification = function(){
             if (character === 'narrator'){
                 return 'center'
             }
             if (character === 'protagonist'){
-                return 'left'
+                return 'flex-start'
             }
-            return 'right'
+            return 'flex-end'
         }()
-        textDiv[index].style.width = '90dvw'
+        textDiv[index].style.alignSelf = contentJustification
+        textDiv[index].style.justifyContent = 'center'
         textDiv[index].style.alignContent = 'center'
-        textDiv[index].style.alignItems = 'center'
-        textDiv[index].style.justifyContent = contentJustification
-        textDiv[index].style.justifyItems = contentJustification
         
 
     })

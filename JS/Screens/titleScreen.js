@@ -156,7 +156,7 @@ function* gen_titleAnimation(animationTimeInMs, numberOfBlocks){
     const timeStamp1 = animationTimeInMs * 0.2
     const timeStamp2 = animationTimeInMs * 0.5
     const timeStamp3 = animationTimeInMs * 0.7
-     const timeStamp4 = animationTimeInMs * 1
+    const timeStamp4 = animationTimeInMs * 1
 
     while(true){
         const elapsedTime = Date.now() - referenceTime
