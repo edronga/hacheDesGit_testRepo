@@ -60,6 +60,23 @@ function getDifficultToSolveProblem(difficulty){
 }
 
 
+function generateEasyToSolveProblemsByGreedyApproach(difficulty, numberOfFixedSlots, number){
+    let r = []
+    while(r.length < number){
+        const fixedSchedule = (numberOfFixedSlots === 0) ? new Schedule() : generateRandomSchedule(numberOfFixedSlots);
+        const slotlist = generateSlotlist(difficulty, fixedSchedule)
+
+        if (checkMajorConstraints(greedySolve(slotlist, fixedSchedule).value) === checkMajorConstraints(exactSolver(slotlist, fixedSchedule).value)){
+            r.push({
+                slotlist: slotlist,
+                fixedSchedule: fixedSchedule.copy()
+            })
+            console.log(r.length)
+        }
+    }
+    return r;
+}
+
 
 function getListOfDifficultToSolveEasyProblems(){
     return [

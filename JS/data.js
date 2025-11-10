@@ -46,6 +46,42 @@ let gameData = {
                 slotlist = data.slotlist
                 break;
 
+            // to do : replace with premade problems
+            case 'level1':
+                data = generateEasyToSolveProblemsByGreedyApproach('easy', 0, 1)[0]
+                fixedSchedule = new Schedule()
+                fixedSchedule.value = data.fixedSchedule.value
+                slotlist = data.slotlist
+                break;
+
+            case 'level2':
+                data = generateEasyToSolveProblemsByGreedyApproach('easy', 2, 1)[0]
+                fixedSchedule = new Schedule()
+                fixedSchedule.value = data.fixedSchedule.value
+                slotlist = data.slotlist
+                break;
+                
+            case 'level3':
+                data = generateEasyToSolveProblemsByGreedyApproach('easy', 4, 1)[0]
+                fixedSchedule = new Schedule()
+                fixedSchedule.value = data.fixedSchedule.value
+                slotlist = data.slotlist
+                break;
+
+            case 'level4':
+                data = generateEasyToSolveProblemsByGreedyApproach('medium', 2, 1)[0]
+                fixedSchedule = new Schedule()
+                fixedSchedule.value = data.fixedSchedule.value
+                slotlist = data.slotlist
+                break;
+
+            case 'level5':
+                data = generateEasyToSolveProblemsByGreedyApproach('medium', 4, 1)[0]
+                fixedSchedule = new Schedule()
+                fixedSchedule.value = data.fixedSchedule.value
+                slotlist = data.slotlist
+                break;
+
             default: // case 'custom'
                 fixedSchedule = generateRandomSchedule(Math.ceil(Math.random() * 5))
                 slotlist = generateSlotlist(1, fixedSchedule)
