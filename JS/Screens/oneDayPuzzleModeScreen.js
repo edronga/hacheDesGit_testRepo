@@ -186,10 +186,10 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
         if (currentScore <  gameData.bestFoundScore ){
             return 'yellow'
         }
-        if (currentScore - gameData.bestFoundScore <= 3){
-            return `hsl(130, 100%, ${50 + (currentScore - gameData.bestFoundScore)* 10}%)`
+        if (currentScore - gameData.bestFoundScore <= 2){
+            return `hsl(130, ${100 - (currentScore - gameData.bestFoundScore)* (25/2)}%, 50%)`
         }
-        return `hsl(130, 75%, ${80 + ((currentScore - 3 - gameData.bestFoundScore)/(gameData.worstFoundScore - 3 - gameData.bestFoundScore) )* 20}%)`
+        return `hsl(130, 75%, ${50 + ((currentScore - 2 - gameData.bestFoundScore)/(gameData.worstFoundScore - 2 - gameData.bestFoundScore) )* 45}%)`
     }()
 
     r.querySelector(`#buttonDivok`).innerHTML = `\u{1F44D}`
@@ -201,6 +201,13 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
         if (gameData.gameMode === 'story'){
             gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
             return;
+        }
+        if (gameData.gameMode === 'tutorial'){
+            const data = getNextTutorialData.next().value
+            const text = data.text
+            const canvasDescription = data.canvasDescription
+            goToTutorialScreen(text, canvasDescription)
+                return;
         }
     }
     )

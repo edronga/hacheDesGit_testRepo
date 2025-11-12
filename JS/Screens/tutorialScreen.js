@@ -35,7 +35,7 @@ function tutorialScreen(text, canvasDescription){
     textDiv.style.alignItems = 'center'
 
     textArea.style.height = '100%'
-    textArea.style.width = '80%'
+    textArea.style.width = '100%'
     textArea.style.display = 'flex'
     textArea.style.justifyItems = 'center'
     textArea.style.alignItems = 'center'
@@ -43,15 +43,10 @@ function tutorialScreen(text, canvasDescription){
     textArea.style.alignContent = 'center'
 
     textValue.style.marginLeft = '5px'
+    textValue.style.marginRight = '5px'
     textValue.style.marginTop = '0px'
     textValue.style.marginBottom = '0px'
-
-    imgArea.style.height = '100%'
-    imgArea.style.width = '20%'
-    imgArea.style.backgroundImage = 'url(Images/imgNerdEmoji.png)'
-    imgArea.style.backgroundPosition = 'center'
-    imgArea.style.backgroundRepeat = 'no-repeat'
-    imgArea.style.backgroundSize = 'contain'
+    textValue.style.textAlign = 'justify'
 
 
     // event listeners
@@ -66,16 +61,11 @@ function tutorialScreen(text, canvasDescription){
             goToMenu()
             return
         }
-        if (next === 'recordedScreen'){
-            const dataSource = data.dataSourceForRecordedScreen
-            gameData.playRecordedDataScreen.data.dataSourceGeneratorFunction = gen_dataSourceGeneratorFunction(dataSource)
-            gameData.playRecordedDataScreen.data.next = function (){
-                const nextData = getNextTutorialData.next().value
-                return goToTutorialScreen(nextData.text, nextData.canvasDescription)
-            }
-            gameData.playRecordedDataScreen.data.canvasDescription = canvasDescription
-            gameData.getCurrentPage = playRecordedDataScreen
-            return
+        if (next === 'gameplay'){
+            gameData.gameMode = 'tutorial'
+            gameData.initialize('tutorial')
+            gameData.getCurrentPage = oneDayPuzzleModeScreen
+            return;
         }
 
         goToTutorialScreen(text, canvasDescription)
@@ -187,7 +177,7 @@ function* gen_getNextTutorialData(){
         },
         {
             next: '',
-            text: `Bon, comme c'est évident que tu n'as rien compris, voici un exemple...`,
+            text: `Bon, comme c'est évident que tu n'as rien compris, on te laisse expérimenter un peu et on réexplique...`,
             canvasDescription: function(){
                 const fixedSchedule = new Schedule()
                 fixedSchedule.addChemoSlot(11, 7, 1)
@@ -203,24 +193,11 @@ function* gen_getNextTutorialData(){
             }(),
         },
         {
-            next: 'recordedScreen',
+            next: 'gameplay',
             text: ``,
             canvasDescription: function(){
-                const fixedSchedule = new Schedule()
-                fixedSchedule.addChemoSlot(11, 7, 1)
-                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
-                fixedSchedule.addChemoSlot(12, 3, 3)
-                fixedSchedule.addChemoSlot(15.5, 2, 2)
-                const badSchedule = fixedSchedule.copy()
-                badSchedule.addChemoSlot(12.5, 1, 4)
-                badSchedule.addChemoSlot(15.5, 1, 3)
-                badSchedule.addChemoSlot(16.5, 1, 3)
-                badSchedule.addChemoSlot(17.5, 1, 4)
-                gameData.playRecordedDataScreen.data.bestFoundScore = checkMajorConstraints(greedySolve([1, 1, 1, 1], fixedSchedule).value)
-                gameData.playRecordedDataScreen.data.worstFoundScore = checkMajorConstraints(reverseGreedySolve([1, 1, 1, 1], fixedSchedule).value)
-                return new CanvasDescription(badSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
+                return new CanvasDescription(new Schedule(), new Schedule(), window.innerWidth, window.innerHeight*0.8)
             }(),
-            dataSourceForRecordedScreen: myRecordedData[0]
         },
         {
             next: '',
@@ -243,24 +220,6 @@ function* gen_getNextTutorialData(){
             }()
         },
         {
-            next: 'recordedScreen',
-            text: ``,
-            canvasDescription: function(){
-                const fixedSchedule = new Schedule()
-                fixedSchedule.addChemoSlot(11, 7, 1)
-                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
-                fixedSchedule.addChemoSlot(12, 3, 3)
-                fixedSchedule.addChemoSlot(15.5, 2, 2)
-                const badSchedule = fixedSchedule.copy()
-                badSchedule.addChemoSlot(9, 1, 4)
-                badSchedule.addChemoSlot(15.5, 1, 3)
-                badSchedule.addChemoSlot(16.5, 1, 3)
-                badSchedule.addChemoSlot(17.5, 1, 4)
-                return new CanvasDescription(badSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
-            }(),
-            dataSourceForRecordedScreen: myRecordedData[1]
-        },
-        {
             next: '',
             text: `Score de pénalité = <b style = "color: yellowGreen">1</b> :
             <br>- >3 patients sur le même créneau : <b style = "color: green">+0</b>
@@ -279,24 +238,6 @@ function* gen_getNextTutorialData(){
                 badSchedule.addChemoSlot(17.5, 1, 4)
                 return new CanvasDescription(badSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
             }()
-        },
-        {
-            next: 'recordedScreen',
-            text: ``,
-            canvasDescription: function(){
-                const fixedSchedule = new Schedule()
-                fixedSchedule.addChemoSlot(11, 7, 1)
-                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
-                fixedSchedule.addChemoSlot(12, 3, 3)
-                fixedSchedule.addChemoSlot(15.5, 2, 2)
-                const badSchedule = fixedSchedule.copy()
-                badSchedule.addChemoSlot(9, 1, 4)
-                badSchedule.addChemoSlot(10, 1, 2)
-                badSchedule.addChemoSlot(16, 1, 3)
-                badSchedule.addChemoSlot(17.5, 1, 4)
-                return new CanvasDescription(badSchedule, fixedSchedule, window.innerWidth, window.innerHeight*0.8)
-            }(),
-            dataSourceForRecordedScreen: myRecordedData[2]
         },
         {
             next: '',
