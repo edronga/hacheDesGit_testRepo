@@ -46,6 +46,15 @@ let gameData = {
                 slotlist = data.slotlist
                 break;
 
+            case 'tutorial' :
+                fixedSchedule = new Schedule()
+                fixedSchedule.addChemoSlot(11, 7, 1)
+                fixedSchedule.addChemoSlot(11.5, 2.5, 2)
+                fixedSchedule.addChemoSlot(12, 3, 3)
+                fixedSchedule.addChemoSlot(15.5, 2, 2)
+                slotlist = [1, 1, 1, 1]
+                break;
+
             // to do : replace with premade problems
             case 'level1':
                 data = generateEasyToSolveProblemsByGreedyApproach('easy', 0, 1)[0]
