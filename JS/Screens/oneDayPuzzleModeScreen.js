@@ -74,8 +74,6 @@ function oneDayPuzzleModeScreen(canvasDescription = gameData.canvasDescription){
         canvasDescription.ungrabFloatingRectangle()
     })
 
-    /*for recording purposes*/ recordData.loopTracker()
-
     return r;
 }
 
@@ -158,7 +156,7 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
             const name = generateUniqueName.next().value
             const width = 0.18 * canvasDescription.width
             const height = (index + 1) * 0.09 * canvasDescription.height
-            const xPosition = (canvasDescription.width - width) * 0.5
+            const xPosition = canvasDescription.width * 0.18 * 4 * 0.5 + 0.1* canvasDescription.width
             const yPosition = (canvasDescription.height - height) * 0.5
             const color = getHSLColorFromDuration(index + 1)
             const scheduleData = {durationInHours: index + 1}
@@ -199,13 +197,24 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
             return;
         }
         if (gameData.gameMode === 'story'){
+            const scoreCode = function(){
+                if (currentScore === gameData.bestFoundScore){
+                    return 'hasEqualized'
+                }
+                if (currentScore < gameData.bestFoundScore){
+                    return 'hasBeaten'
+                }
+                return 'hasTried'
+            }()
+            gameData.storyModeData.updateScore(scoreCode)
+            gameData.storyModeData.currentLevel++
             gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
             return;
         }
         if (gameData.gameMode === 'tutorial'){
             const data = getNextTutorialData.next().value
-            const text = data.text
-            const canvasDescription = data.canvasDescription
+            const text = data.getText()
+            const canvasDescription = data.getCanvasDescription()
             goToTutorialScreen(text, canvasDescription)
                 return;
         }

@@ -115,7 +115,7 @@ function puzzleModeGameOverScreen(canvasDescription = gameData.canvasDescription
                 return `hasBeaten`
             }
         }()
-        gameData.medalsCounter[difficulty][result]++
+        gameData.medalsCounter.update(difficulty, result)
         goToBestScoresScreen()
     })
 

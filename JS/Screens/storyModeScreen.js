@@ -101,11 +101,13 @@ function storyModeScreenTemplate(textTable){
     })
 
     r.addEventListener('pointerdown', () =>{
-        if (numberOfBubblesToShow < textTable.length){
+        if (numberOfBubblesToShow < textTable.length - 1){
             timerNumberOfIntervalsSinceStarting.next(1)
             return;
         }
         gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
+
+        
     })
 
     return r;
@@ -126,63 +128,55 @@ function storyModeGameOverScreen(){
 
 }
 
-
-const storyText = {
-    'lundi' :[
-        {
-            character: 'protagonist',
-            text:`La journée s'annonce nuageuse !`
+const storyNavigation = {
+    currentScreen: function(){},
+    goToNextStoryScreen: function(){
+        const currentChapter = this.storyScreenCursor
+        this.storyScreenCursor++
+        timerNumberOfIntervalsSinceStarting = gen_timerNumberOfTimeIntervalsSinceStarting(10000)
+        return this.storyScreenSuccession[currentChapter]
+    },
+    storyScreenSuccession:[
+        function() {
+            gameData.initialize('easy') // 'level1'
+            gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
+            return storyModeIntroTemplate('Chapitre 1');
         },
-        {
-            character: 'narrator',
-            text:`Notre protagoniste n'était pas aiguilleur du ciel. Elle était infirmière coordinatrice. C'était un peu pareil, un planning millimétré autour de questions de vie et de mort. Quasiment pareil. En moins bien payé.`
+        function() {return storyModeIntroTemplate('Chapitre 1')},
+        function() {return storyModeScreenTemplate(gameData.storyModeData.plot.chapter1Plot)},
+        function() {return oneDayPuzzleModeScreen()},
+        function() {
+            const result = gameData.storyModeData.score[`level${gameData.storyModeData.currentLevel - 1}`]
+            return storyModeScreenTemplate(chapter1Conclusion[result])
         },
-        {
-            character: 'protagonist',
-            text:`Au moins je sais que je sers à quelque chose.`
+        function() {
+            gameData.initialize('medium')
+            gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
+            return storyModeIntroTemplate('Chapitre 2');
         },
-        {
-            character: 'narrator',
-            text:`Soudain, la directrice de l'hôpital fit irruption dans son bureau.
-            <br>Sans dire bonjour.`
+        function() {return storyModeIntroTemplate('Chapitre 2')},
+        function() {return storyModeScreenTemplate(gameData.storyModeData.plot.chapter2Plot)},
+        function() {return oneDayPuzzleModeScreen()},
+        function() {
+            const result = gameData.storyModeData.score[`level${gameData.storyModeData.currentLevel - 1}`]
+            return storyModeScreenTemplate(chapter2Conclusion[result])
         },
-        {
-            character: `Directrice de l'hôpital`,
-            text : `Je suis venu vous dire qu'on va vous remplacer par un logiciel qui fait votre travail. Mais en mieux. En plus vite. Et en moins cher.`
+        function() {
+            gameData.initialize('hard')
+            gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
+            return storyModeIntroTemplate('Chapitre 3');
         },
-        {
-            character: 'protagonist',
-            text: 'Une intelligence artificielle à la pointe comme ChatGPT ?'
+        function() {return storyModeIntroTemplate('Chapitre 3')},
+        function() {return storyModeScreenTemplate(gameData.storyModeData.plot.chapter3Plot)},
+        function() {return oneDayPuzzleModeScreen()},
+        function() {
+            const result = gameData.storyModeData.score[`level${gameData.storyModeData.currentLevel - 1}`]
+            return storyModeScreenTemplate(chapter3Conclusion[result])
         },
-        {
-            character: `Directrice de l'hôpital`,
-            text: `Non c'est ce qu'on voulait, mais on n'avait pas le budget.
-            <br>A la place, c'est un logiciel developpé par Justine, ma filleule de 12 ans, sur sa calculatrice de poche. Il s'appelle "loIo".`
-        },
-        {
-            character: `narrator`,
-            text: `Notre protagoniste se permit un petit sourire intérieur. Ce n'était pas aujourd'hui qu'elle allait être remplacée par une machine.`
-        },
-        {
-            character: `Directrice de l'hôpital`,
-            text: `Allez c'est parti pour un petit test. On a configuré loIo sur le planning du jour. Si vous ne faites pas mieux, vous êtes virée.`
-        }
-    
-
+        function() {return storyModeGameOverScreen()},
+        function() {return titleScreen()}
     ],
-    'mardi' :[
-
-    ],
-    'mercredi' :[
-
-    ],
-    'jeudi' :[
-
-    ],
-    'vendredi' :[
-
-    ],
-
+    storyScreenCursor: 0,
 }
 
 let timerNumberOfIntervalsSinceStarting = gen_timerNumberOfTimeIntervalsSinceStarting(10000)
