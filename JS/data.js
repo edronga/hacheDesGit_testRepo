@@ -141,6 +141,55 @@ let gameData = {
             hasTried: 0,
             hasEqualized: 0,
             hasBeaten: 0
+        },
+        update: function(difficulty, result){
+            if (!['easy', 'medium', 'hard', 'storyMode'].includes(difficulty) && !['hasTried', 'hasEqualized', 'hasBeaten'].includes(result)){
+                throw new Error('unanticipated variable')
+            }
+            if (result === 'hasTried'){
+                this[difficulty]['hasTried'] = 1
+                return;
+            }
+            if (result === 'hasEqualized'){
+                this[difficulty]['hasTried'] = 1
+                this[difficulty]['hasEqualized'] = 1
+                return;
+            }
+            if (result === 'hasBeaten'){
+                this[difficulty]['hasTried'] = 1
+                this[difficulty]['hasEqualized'] = 1
+                this[difficulty]['hasBeaten'] = 1
+                return;
+            }
+        }
+    },
+    storyModeData:{
+        currentLevel: 1,
+        score : {
+            'level1': undefined,
+            'level2': undefined,
+            'level3': undefined
+        },
+        plot: {
+            chapter1Plot: chapter1Plot,
+            chapter2Plot: chapter2Plot[0],
+            chapter3Plot: chapter3Plot
+        },
+        initialize: function(){
+            this.currentLevel = 1,
+            this.score = {
+                'level1': undefined,
+                'level2': undefined,
+                'level3': undefined
+            } 
+            this.plot.chapter2Plot = function() {
+                const l = chapter2Plot.length
+                let rand = Math.floor(Math.random() * l)
+                return chapter2Plot[rand]
+            }()
+        },
+        updateScore: function(score, currentLevel = gameData.storyModeData.currentLevel){
+            this.score[`level${currentLevel}`] = score
         }
     },
     playRecordedDataScreen: {

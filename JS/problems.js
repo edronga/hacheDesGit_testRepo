@@ -1,9 +1,9 @@
 'use strict'
 
-function generateDifficultToSolveProblems(difficulty, number){
+function generateDifficultToSolveProblems(difficulty, number, numberOfFixedSlots = 3){
     let r = []
     while(r.length < number){
-        const fixedSchedule = generateRandomSchedule(3)
+        const fixedSchedule = (numberOfFixedSlots <= 0) ? new Schedule() : generateRandomSchedule(numberOfFixedSlots);
         const slotlist = generateSlotlist(difficulty, fixedSchedule)
 
         if (checkMajorConstraints(greedySolve(slotlist, fixedSchedule).value) > checkMajorConstraints(exactSolver(slotlist, fixedSchedule).value)){
