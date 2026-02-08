@@ -3,6 +3,13 @@
 function goToIntroScreen2(){
     gameData.newColorTheme()
     gameData.getCurrentPage = getIntroScreen2
+    const preloadImages = function(){
+        const imagesSrc = ['Images/imgAxe.png', 'Images/imgCamping.png', 'Images/imgDie.png', 'Images/imgTombstone.png', 'Images/titleImage.png','Images/imgGift.png', 'Images/imgMedal.png', 'Images/imgMedalVoid.png', 'Images/imgNerdEmoji.png', 'Images/imgNeutralFaceEmoji.png', 'Images/imgSmilingEmoji.png', 'Images/imgSunglassesEmoji.png', 'Images/imgOneStar.png', 'Images/imgTwoStars.png', 'Images/imgThreeStars.png', 'Images/imgNurseVsRobot.png']
+        imagesSrc.forEach((string) =>{
+            const img = new Image()
+            img.src = string
+        })
+    }()
 }
 
 function goToTitleScreen(){
