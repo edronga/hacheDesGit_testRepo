@@ -185,6 +185,8 @@ class CanvasDescription {
             this.targetRectangleData = {}
 
             this.isFloatingRectangleGrabbed = false
+
+            music.playSound(myMusic.pop)
         }
     }
     drawBackground(canvasWidth, canvasHeight, ctx){

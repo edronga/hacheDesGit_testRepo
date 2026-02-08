@@ -32,5 +32,6 @@ document.addEventListener('pointerup', (e) => {
     e.preventDefault();
 }, {passive: false})
 
-gameData.getCurrentPage = titleScreen
+gameData.getCurrentPage = getIntroScreen1
+let music = new MusicPlayer(myMusic.musicFile, myMusic.soundFile)
 loop();

@@ -55,41 +55,13 @@ let gameData = {
                 slotlist = [1, 1, 1, 1]
                 break;
 
-            // to do : replace with premade problems
-            case 'level1':
-                data = generateEasyToSolveProblemsByGreedyApproach('easy', 0, 1)[0]
+            case 'storyMode':
+                data = getDifficultToSolveProblem('story')
                 fixedSchedule = new Schedule()
                 fixedSchedule.value = data.fixedSchedule.value
                 slotlist = data.slotlist
                 break;
 
-            case 'level2':
-                data = generateEasyToSolveProblemsByGreedyApproach('easy', 2, 1)[0]
-                fixedSchedule = new Schedule()
-                fixedSchedule.value = data.fixedSchedule.value
-                slotlist = data.slotlist
-                break;
-                
-            case 'level3':
-                data = generateEasyToSolveProblemsByGreedyApproach('easy', 4, 1)[0]
-                fixedSchedule = new Schedule()
-                fixedSchedule.value = data.fixedSchedule.value
-                slotlist = data.slotlist
-                break;
-
-            case 'level4':
-                data = generateEasyToSolveProblemsByGreedyApproach('medium', 2, 1)[0]
-                fixedSchedule = new Schedule()
-                fixedSchedule.value = data.fixedSchedule.value
-                slotlist = data.slotlist
-                break;
-
-            case 'level5':
-                data = generateEasyToSolveProblemsByGreedyApproach('medium', 4, 1)[0]
-                fixedSchedule = new Schedule()
-                fixedSchedule.value = data.fixedSchedule.value
-                slotlist = data.slotlist
-                break;
 
             default: // case 'custom'
                 fixedSchedule = generateRandomSchedule(Math.ceil(Math.random() * 5))
@@ -161,43 +133,62 @@ let gameData = {
                 this[difficulty]['hasBeaten'] = 1
                 return;
             }
+        },
+        countMedals: function() {
+            let r = 0
+            const difficulty = ['easy', 'medium', 'hard', 'storyMode']
+            difficulty.forEach((difficulty) =>{
+                Object.keys(this[difficulty]).forEach((medal) =>{
+                    r = (medal === 1) ? r++ : r;
+                })
+            })
+            return r;
         }
     },
     storyModeData:{
         currentLevel: 1,
         score : {
             'level1': undefined,
-            'level2': undefined,
-            'level3': undefined
         },
         plot: {
-            chapter1Plot: chapter1Plot,
-            chapter2Plot: chapter2Plot[0],
-            chapter3Plot: chapter3Plot
+            chapter1Plot_Part1: chapter1Plot_Part1,
+            chapter1Plot_Part2: chapter1Plot_Part2,
         },
         initialize: function(){
             this.currentLevel = 1,
             this.score = {
                 'level1': undefined,
-                'level2': undefined,
-                'level3': undefined
             } 
-            this.plot.chapter2Plot = function() {
-                const l = chapter2Plot.length
-                let rand = Math.floor(Math.random() * l)
-                return chapter2Plot[rand]
-            }()
         },
         updateScore: function(score, currentLevel = gameData.storyModeData.currentLevel){
             this.score[`level${currentLevel}`] = score
         }
-    },
-    playRecordedDataScreen: {
-        data : {
-            dataSourceGeneratorFunction: function(){},
-            canvasDescription: {},
-            next: function(){},
-            bestFoundScore: 0,
-            worstFoundScore: 0
-        }}
+    }
+}
+
+/*
+    music from https://studio.youtube.com
+*/
+
+let myMusic = {
+    musicFile: [
+        'Music/Birthday Cake - Reed Mathis.mp3',
+        'Music/I Wuv U - Jeremy Korpas.mp3',
+        'Music/Kazoom - Quincas Moreira.mp3',
+        'Music/Ponies and Balloons - The Green Orbs.mp3',
+        'Music/Splashing Around - The Green Orbs.mp3'
+    ],
+    soundFile: [
+        'Music/Pop.mp3',
+        'Music/Metallic Clank.mp3',
+        'Music/Swoosh.mp3'
+    ],
+    titleScreen: 'Music/Birthday Cake - Reed Mathis.mp3',
+    menuScreen: 'Music/Ponies and Balloons - The Green Orbs.mp3',
+    medalsLow: 'Music/I Wuv U - Jeremy Korpas.mp3',
+    medalsMedium: 'Music/Splashing Around - The Green Orbs.mp3',
+    medalsHigh: 'Music/Kazoom - Quincas Moreira.mp3',
+    pop: 'Music/Pop.mp3',
+    click: 'Music/Metallic Clank.mp3',
+    shuffle: 'Music/Swoosh.mp3'
 }
