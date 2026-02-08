@@ -46,7 +46,7 @@ function getIntroScreen2(){
     const quote = function(){
         let r = document.createElement('div')
         r.style.width = '95%'
-        r.style.height = '20%'
+        r.style.height = '30%'
         r.style.margin = 0
         r.style.display = 'flex'
         r.style.alignItems = 'center'
@@ -59,12 +59,15 @@ function getIntroScreen2(){
         const text = function(){
             let r = document.createElement('p')
             r.style.width = '100%'
-            r.style.height = '20%'
+            r.style.height = '100%'
             r.style.margin = 0
             r.style.fontSize = '16px'
             r.style.textAlign = 'center'
+            r.style.alignContent = 'center'
 
-            r.innerText = `"J'ai jamais dit ça."\nLaurence D.`
+            r.innerText = `"En gros, elle passe son temps à jouer à l'ordinateur et à papoter au téléphone. Parfois les 2 en même temps. Et en plus elle est payée pour ça." (Anonyme)
+            \n\n"C'est pas vrai du tout." (Laurence D.)
+            `
 
             return r;
 

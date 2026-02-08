@@ -44,24 +44,24 @@ function bestScoresScreen(){
     myStyle.addBackgroundImage('Images/imgNeutralFaceEmoji.png', subDivBlock[1].style)
     myStyle.addBackgroundImage('Images/imgSmilingEmoji.png', subDivBlock[2].style)
     myStyle.addBackgroundImage('Images/imgSunglassesEmoji.png', subDivBlock[3].style)
-    myStyle.addBackgroundImage('Images/imgOneStar.png', subDivBlock[4].style)
-    myStyle.addBackgroundImage('Images/imgTwoStars.png', subDivBlock[8].style)
-    myStyle.addBackgroundImage('Images/imgThreeStars.png', subDivBlock[12].style)
-    myStyle.addBackgroundImage('Images/imgCamping.png', subDivBlock[16].style)
+    myStyle.addBackgroundImage('Images/imgCamping.png', subDivBlock[4].style)
+    myStyle.addBackgroundImage('Images/imgOneStar.png', subDivBlock[8].style)
+    myStyle.addBackgroundImage('Images/imgTwoStars.png', subDivBlock[12].style)
+    myStyle.addBackgroundImage('Images/imgThreeStars.png', subDivBlock[16].style)
 
     const medalsDiv = [
-        [5, 'easy', 'hasTried'], 
-        [6, 'easy', 'hasEqualized'],
-        [7, 'easy', 'hasBeaten'],
-        [9, 'medium', 'hasTried'], 
-        [10, 'medium', 'hasEqualized'],
-        [11, 'medium', 'hasBeaten'],
-        [13, 'hard', 'hasTried'], 
-        [14, 'hard', 'hasEqualized'],
-        [15, 'hard', 'hasBeaten'],
-        [17, 'storyMode', 'hasTried'], 
-        [18, 'storyMode', 'hasEqualized'],
-        [19, 'storyMode', 'hasBeaten']
+        [5, 'storyMode', 'hasTried'], 
+        [6, 'storyMode', 'hasEqualized'],
+        [7, 'storyMode', 'hasBeaten'],
+        [9, 'easy', 'hasTried'], 
+        [10, 'easy', 'hasEqualized'],
+        [11, 'easy', 'hasBeaten'],
+        [13, 'medium', 'hasTried'], 
+        [14, 'medium', 'hasEqualized'],
+        [15, 'medium', 'hasBeaten'],
+        [17, 'hard', 'hasTried'], 
+        [18, 'hard', 'hasEqualized'],
+        [19, 'hard', 'hasBeaten']
     ]
     medalsDiv.forEach((v) =>{
         const n = v[0]

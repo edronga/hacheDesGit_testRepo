@@ -32,7 +32,7 @@ function storyModeIntroTemplate(text){
     dayTitleDiv.style.alignContent = 'center'
     dayTitleDiv.style.backgroundColor = 'white'
 
-    dayTitleText.style.fontSize = '10dvh'
+    dayTitleText.style.fontSize = '4dvh'
     
     r.addEventListener('pointerdown', () =>{
         timerNumberOfIntervalsSinceStarting = gen_timerNumberOfTimeIntervalsSinceStarting(3000)
@@ -114,20 +114,6 @@ function storyModeScreenTemplate(textTable){
     return r;
 }
 
-function storyModeGameOverScreen(){
-    let r = document.createElement('div')
-
-    r.style.margin = 0
-    r.style.height = '100dvh'
-    r.style.width = '100dvw'
-
-    r.addEventListener('pointerdown', () =>{
-        gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
-    })
-
-    return r;
-
-}
 
 const storyNavigation = {
     currentScreen: function(){},
@@ -141,9 +127,9 @@ const storyNavigation = {
         function() {
             gameData.initialize('storyMode')
             gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
-            return storyModeIntroTemplate('Chapitre 1');
+            return storyModeIntroTemplate('ideCoordinatrice.ex(e)');
         },
-        function() {return storyModeIntroTemplate('Chapitre 1')},
+        function() {return storyModeIntroTemplate('ideCoordinatrice.ex(e)')},
         function() {return storyModeScreenTemplate(gameData.storyModeData.plot.chapter1Plot_Part1)},
         function() {return storyModeScreenTemplate(gameData.storyModeData.plot.chapter1Plot_Part2)},
         function() {return oneDayPuzzleModeScreen()},
@@ -151,7 +137,6 @@ const storyNavigation = {
             const result = gameData.storyModeData.score[`level${gameData.storyModeData.currentLevel - 1}`]
             return storyModeScreenTemplate(chapter1Conclusion[result])
         },
-        function() {return storyModeGameOverScreen()},
         function() {
             music.changeMusic(myMusic.titleScreen)
             return titleScreen()

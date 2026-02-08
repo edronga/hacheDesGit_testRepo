@@ -125,6 +125,23 @@ function puzzleModeGameOverScreen(canvasDescription = gameData.canvasDescription
     }
 
     nextButton.addEventListener('pointerdown', () =>{
+        if (gameData.gameMode === 'story'){
+            const scoreCode = function(){
+                if (playerScore === gameData.bestFoundScore){
+                    return 'hasEqualized'
+                }
+                if (playerScore < gameData.bestFoundScore){
+                    return 'hasBeaten'
+                }
+                return 'hasTried'
+            }()
+            gameData.storyModeData.updateScore(scoreCode)
+            gameData.storyModeData.currentLevel++
+            gameData.medalsCounter.update('storyMode', scoreCode)
+            gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
+            return;
+        }
+
         const difficulty = gameData.currentDifficultySetting
         const result = function(){
             if (playerScore > bestFoundScore){

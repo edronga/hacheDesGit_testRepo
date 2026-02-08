@@ -198,7 +198,7 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
 
     r.querySelector(`#buttonDivok`).innerHTML = `\u{1F44D}`
     r.querySelector(`#buttonDivok`).addEventListener('pointerdown', () =>{
-        
+
         music.playSound(myMusic.click)
 
         if (gameData.gameMode === 'puzzle'){
@@ -206,18 +206,7 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
             return;
         }
         if (gameData.gameMode === 'story'){
-            const scoreCode = function(){
-                if (currentScore === gameData.bestFoundScore){
-                    return 'hasEqualized'
-                }
-                if (currentScore < gameData.bestFoundScore){
-                    return 'hasBeaten'
-                }
-                return 'hasTried'
-            }()
-            gameData.storyModeData.updateScore(scoreCode)
-            gameData.storyModeData.currentLevel++
-            gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
+            goToPuzzleModeGameOverScreen()
             return;
         }
         if (gameData.gameMode === 'tutorial'){
