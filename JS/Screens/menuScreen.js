@@ -46,7 +46,7 @@ function menuScreen() {
     })
 
     divTuto.addEventListener('pointerdown', () =>{
-        const text = `C'est un jeu d'optimisation de planning.<br/>L'objectif est d'obtenir un score aussi bon voire meilleur que notre logiciel d'optimisation Intelligente en oncologie.<br>(Il s'appelle lolo\u00AE)`
+        const text = `C'est un jeu d'optimisation de planning.<br/>L'objectif est d'obtenir un score aussi bon voire meilleur que notre "logiciel d'optimisation linéaire en oncologie".<br>(Il s'appelle lolo\u00AE)`
         const canvasDescription = new CanvasDescription(new Schedule(), new Schedule(), window.innerWidth, window.innerHeight*0.8)
         goToTutorialScreen(text, canvasDescription)
     })
