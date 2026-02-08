@@ -15,7 +15,7 @@ const chapter1Plot_Part1 = [
     },
     {
         character: 'narrator',
-        text: `Soudain la directrice de l'hôpital fit irruption dans son bureau.Sans dire bonjour`
+        text: `Soudain la directrice de l'hôpital fit irruption dans son bureau. Sans dire bonjour.`
     },
     {
         character: 'directrice',
@@ -42,7 +42,7 @@ const chapter1Plot_Part2 = [
     },
     {
         character: 'narrator',
-        text: `La directrice prit un air songeur. Elle songeait à annoncer à notre protagoniste qu'elle allait être virée avec tact et délicatesse.`
+        text: `La directrice prit un air songeur. Elle réfléchissait à comment annoncer à notre protagoniste qu'elle allait être virée, avec tact et délicatesse.`
     },
     {
         character: 'directrice',
@@ -68,7 +68,7 @@ const chapter1Conclusion = {
     [
     {
         character:'narrator',
-        text:`Contre toute attente, notre protagoniste avait réussi à faire une planning mieux optimisé que lolo\u00AE.`
+        text:`Contre toute attente, notre protagoniste avait réussi à faire un planning mieux optimisé que lolo\u00AE.`
     },
     {
         character:'protagonist',
@@ -84,7 +84,11 @@ const chapter1Conclusion = {
     },
     {
         character:'narrator',
-        text:`Et tout est bien qui finit bien. \nNotre protagoniste ne se retrouva pas au chomâge.\nLolo\u00AE fut reconverti en machine à café hors de prix.\nEt la directrice reçut un bonus pour son initiative fructueuse d'intégration des nouvelles technologies d'intelligence articielle au sein du pôle d'Oncologie.`
+        text:`<br>FIN`
+    },
+    {
+        character:'narrator',
+        text:`Et tout est bien qui finit bien. <br>Notre protagoniste ne se retrouva pas au chomâge.<br>Lolo\u00AE fut reconvertie en machine à café hors de prix.<br>Et la directrice reçut un bonus pour son initiative fructueuse d'intégration des nouvelles technologies d'intelligence articielle au sein du pôle d'Oncologie.`
     }
     ],
     hasEqualized: 
@@ -107,7 +111,7 @@ const chapter1Conclusion = {
     },
     {
         character:'narrator',
-        text:`(TRISTE) FIN`
+        text:`<br>(TRISTE) FIN`
     },
     {
         character:'narrator',
@@ -118,7 +122,7 @@ const chapter1Conclusion = {
     [
     {
         character:'narrator',
-        text:`Une défaite éclatante. Notre protagoniste avait échoué à faire mieux que lolo\u00AE`
+        text:`Une défaite éclatante. Notre protagoniste avait échoué à faire mieux que lolo\u00AE.`
     },
     {
         character:'protagonist',
@@ -134,7 +138,7 @@ const chapter1Conclusion = {
     },
     {
         character:'narrator',
-        text:`(TRISTE) FIN`
+        text:`<br>(TRISTE) FIN`
     },
     {
         character:'narrator',
