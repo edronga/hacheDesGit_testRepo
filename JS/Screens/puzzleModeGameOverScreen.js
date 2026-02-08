@@ -32,7 +32,7 @@ function puzzleModeGameOverScreen(canvasDescription = gameData.canvasDescription
     }()
     textArea.innerHTML = `
     <p>Score : ${playerScore}<br>
-    Meilleur score trouvé par loIo: ${bestFoundScore}<br>
+    Meilleur score trouvé par lolo\u00AE: ${bestFoundScore}<br>
     ${comment}</p>
     `
 
@@ -83,14 +83,35 @@ function puzzleModeGameOverScreen(canvasDescription = gameData.canvasDescription
     myStyle.addBackgroundImage(imgUrl, imgArea.style)
     
 
-    nextButton.style.height = '100%'
-    nextButton.style.width = '100%'
+    nextButton.style.height = '95%'
+    nextButton.style.width = '95%'
     nextButton.style.gridArea = 'c'
     nextButton.style.display = 'flex'
     nextButton.style.justifyItems  = 'center'
     nextButton.style.alignItems = 'center'
     nextButton.style.justifyContent  = 'center'
     nextButton.style.alignContent = 'center'
+    nextButton.style.border = 'solid black 1px'
+    nextButton.style.borderRadius = '2px'
+    const currentScore = checkMajorConstraints(gameData.canvasDescription.schedule.value) + 100* gameData.chemoSlotsDescription.unplacedSlots.length + 100*(gameData.canvasDescription.isThereAFloatingRectangle() ? 1 : 0)
+    nextButton.style.backgroundColor = function(){
+        if (currentScore > 100){
+            return 'paleTurquoise'
+        }
+        if (currentScore <  gameData.bestFoundScore ){
+            return 'yellow'
+        }
+        if (currentScore - gameData.bestFoundScore === 0){
+            return 'greenYellow'
+        }
+        if (currentScore - gameData.bestFoundScore === 1){
+            return 'lime'
+        }
+        if (currentScore - gameData.bestFoundScore === 2){
+            return 'springGreen'
+        }
+        return `hsl(130, 75%, ${50 + ((currentScore - 2 - gameData.bestFoundScore)/(gameData.worstFoundScore - 2 - gameData.bestFoundScore) )* 45}%)`
+    }()
 
     textArea.addEventListener('pointerdown', solve)
     canvas.addEventListener('pointerdown', solve)
@@ -100,6 +121,7 @@ function puzzleModeGameOverScreen(canvasDescription = gameData.canvasDescription
         gameData.canvasDescription = new CanvasDescription(solution, gameData.chemoSlotsDescription.fixedSchedule, window.innerWidth, window.innerHeight*0.8)
         gameData.chemoSlotsDescription.placedSlots = gameData.chemoSlotsDescription.completeList
         gameData.chemoSlotsDescription.unplacedSlots = []
+        music.playSound(myMusic.shuffle)
     }
 
     nextButton.addEventListener('pointerdown', () =>{

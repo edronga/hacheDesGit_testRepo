@@ -18,19 +18,19 @@ function menuScreen() {
     r.appendChild(divTuto)
     divTuto.innerHTML = '<p>Tutoriel</p>'
 
-    const divPuzzle = document.createElement('div')
-    r.appendChild(divPuzzle)
-    divPuzzle.innerHTML = '<p>Puzzle</p>'
-
     const storyMode = document.createElement('div')
     r.appendChild(storyMode)
     storyMode.innerHTML = '<p>Histoire</p>'
+
+    const divPuzzle = document.createElement('div')
+    r.appendChild(divPuzzle)
+    divPuzzle.innerHTML = '<p>Puzzle</p>'
 
     const highScores = document.createElement('div')
     r.appendChild(highScores)
     highScores.innerHTML = '<p>Médailles</p>'
 
-    const group = [divTuto, divPuzzle, storyMode, highScores]
+    const group = [divTuto, storyMode, divPuzzle, highScores]
     group.forEach((element, index) =>{
         element.style.width = '80dvw'
         element.style.height = '20dvh'

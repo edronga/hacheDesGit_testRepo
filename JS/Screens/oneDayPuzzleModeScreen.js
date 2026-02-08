@@ -184,14 +184,23 @@ function getButtonsDivContent(HEIGHT, WIDTH, unplacedSlots = gameData.chemoSlots
         if (currentScore <  gameData.bestFoundScore ){
             return 'yellow'
         }
-        if (currentScore - gameData.bestFoundScore <= 2){
-            return `hsl(130, ${100 - (currentScore - gameData.bestFoundScore)* (25/2)}%, 50%)`
+        if (currentScore - gameData.bestFoundScore === 0){
+            return 'greenYellow'
+        }
+        if (currentScore - gameData.bestFoundScore === 1){
+            return 'lime'
+        }
+        if (currentScore - gameData.bestFoundScore === 2){
+            return 'springGreen'
         }
         return `hsl(130, 75%, ${50 + ((currentScore - 2 - gameData.bestFoundScore)/(gameData.worstFoundScore - 2 - gameData.bestFoundScore) )* 45}%)`
     }()
 
     r.querySelector(`#buttonDivok`).innerHTML = `\u{1F44D}`
     r.querySelector(`#buttonDivok`).addEventListener('pointerdown', () =>{
+        
+        music.playSound(myMusic.click)
+
         if (gameData.gameMode === 'puzzle'){
             goToPuzzleModeGameOverScreen()
             return;

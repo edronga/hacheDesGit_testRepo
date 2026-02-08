@@ -59,7 +59,7 @@ function tutorialScreen(text, canvasDescription){
         if (next === 'over'){
             getNextTutorialData = gen_getNextTutorialData()
             goToMenu()
-            return
+            return;
         }
         if (next === 'gameplay'){
             gameData.gameMode = 'tutorial'
@@ -80,6 +80,7 @@ function tutorialScreen(text, canvasDescription){
         }
 
         goToTutorialScreen(text, canvasDescription)
+        music.playSound(myMusic.click)
     })
 
    
@@ -279,7 +280,7 @@ function* gen_getNextTutorialData(){
         },
         {
             next: '',
-            text: `L'objectif est d'avoir le score le plus bas possible. Il y a aussi des médailles à collectionner : pour avoir participé (\u{1F610}), pour faire aussi bien que loIo (\u{1F642}), ou si tu fais encore mieux (\u{1F60E})!
+            text: `L'objectif est d'avoir le score le plus bas possible. Il y a aussi des médailles à collectionner : pour avoir participé (\u{1F610}), pour faire aussi bien que lolo\u00AE (\u{1F642}), ou si tu fais encore mieux (\u{1F60E})!
             <br>Bon courage !`,
             getText: function(){
                 return this.text;

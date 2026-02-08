@@ -17,6 +17,7 @@ function titleScreen(){
     'j k l' 33dvw
     'x x x' auto /33dvw 33dvw 33dvw
     `
+    r.style.backgroundColor = 'whitesmoke'
 
     const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']
     let divBlock = []

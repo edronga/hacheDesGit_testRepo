@@ -106,6 +106,7 @@ function storyModeScreenTemplate(textTable){
             return;
         }
         gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
+        music.playSound(myMusic.click)
 
         
     })
@@ -138,43 +139,23 @@ const storyNavigation = {
     },
     storyScreenSuccession:[
         function() {
-            gameData.initialize('easy') // 'level1'
+            gameData.initialize('storyMode')
             gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
             return storyModeIntroTemplate('Chapitre 1');
         },
         function() {return storyModeIntroTemplate('Chapitre 1')},
-        function() {return storyModeScreenTemplate(gameData.storyModeData.plot.chapter1Plot)},
+        function() {return storyModeScreenTemplate(gameData.storyModeData.plot.chapter1Plot_Part1)},
+        function() {return storyModeScreenTemplate(gameData.storyModeData.plot.chapter1Plot_Part2)},
         function() {return oneDayPuzzleModeScreen()},
         function() {
             const result = gameData.storyModeData.score[`level${gameData.storyModeData.currentLevel - 1}`]
             return storyModeScreenTemplate(chapter1Conclusion[result])
         },
-        function() {
-            gameData.initialize('medium')
-            gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
-            return storyModeIntroTemplate('Chapitre 2');
-        },
-        function() {return storyModeIntroTemplate('Chapitre 2')},
-        function() {return storyModeScreenTemplate(gameData.storyModeData.plot.chapter2Plot)},
-        function() {return oneDayPuzzleModeScreen()},
-        function() {
-            const result = gameData.storyModeData.score[`level${gameData.storyModeData.currentLevel - 1}`]
-            return storyModeScreenTemplate(chapter2Conclusion[result])
-        },
-        function() {
-            gameData.initialize('hard')
-            gameData.getCurrentPage = storyNavigation.goToNextStoryScreen()
-            return storyModeIntroTemplate('Chapitre 3');
-        },
-        function() {return storyModeIntroTemplate('Chapitre 3')},
-        function() {return storyModeScreenTemplate(gameData.storyModeData.plot.chapter3Plot)},
-        function() {return oneDayPuzzleModeScreen()},
-        function() {
-            const result = gameData.storyModeData.score[`level${gameData.storyModeData.currentLevel - 1}`]
-            return storyModeScreenTemplate(chapter3Conclusion[result])
-        },
         function() {return storyModeGameOverScreen()},
-        function() {return titleScreen()}
+        function() {
+            music.changeMusic(myMusic.titleScreen)
+            return titleScreen()
+        }
     ],
     storyScreenCursor: 0,
 }
